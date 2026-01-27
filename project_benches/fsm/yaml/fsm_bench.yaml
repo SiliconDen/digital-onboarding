@@ -1,0 +1,17 @@
+uvmf:
+  benches:
+    fsm:
+      active_passive:
+      - bfm_name: fsm_in
+        value: ACTIVE
+      - bfm_name: fsm_out
+        value: PASSIVE
+      active_passive_default: ACTIVE
+      clock_half_period: 10ns
+      clock_phase_offset: 9ns
+      existing_library_component: 'True'
+      interface_params: []
+      reset_assertion_level: 'False'
+      reset_duration: 250ns
+      top_env: fsm
+      use_dpi_link: 'False'

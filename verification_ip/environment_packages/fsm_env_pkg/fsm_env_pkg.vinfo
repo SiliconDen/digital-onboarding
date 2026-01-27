@@ -1,0 +1,5 @@
+@use $UVMF_HOME/uvmf_base_pkg/uvmf_base_pkg.vinfo
+@use $UVMF_VIP_LIBRARY_HOME/interface_packages/fsm_in_pkg/fsm_in_pkg.vinfo
+@use $UVMF_VIP_LIBRARY_HOME/interface_packages/fsm_out_pkg/fsm_out_pkg.vinfo
++incdir+@vinfodir
+fsm_env_pkg.sv

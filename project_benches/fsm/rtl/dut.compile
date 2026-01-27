@@ -1,0 +1,29 @@
+
+src:
+# pragma uvmf custom src_additional begin
+# pragma uvmf custom src_additional end
+# pragma uvmf custom dut_compile_info begin
+  #-----------------------------------------------------------------------------
+  # Counter Modules
+  #-----------------------------------------------------------------------------
+  - ./verilog/cycle_counter.v
+  - ./verilog/pulse_counter.v
+  - ./verilog/measurement_counter.v
+
+  #-----------------------------------------------------------------------------
+  # State Machine
+  #-----------------------------------------------------------------------------
+  # Golden FSM (default - use for Phase 1)
+  - ./verilog/golden_fsm.v
+
+  # Custom FSM (uncomment for Phase 2, comment out golden_fsm.v above)
+  # - ./submission/state_machine.sv
+
+  #-----------------------------------------------------------------------------
+  # Top-Level Module
+  #-----------------------------------------------------------------------------
+  - ./verilog/digital_top.v
+# pragma uvmf custom dut_compile_info end
+
+# pragma uvmf custom compile_additional begin
+# pragma uvmf custom compile_additional end

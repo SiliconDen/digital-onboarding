@@ -1,0 +1,53 @@
+uvmf:
+  environments:
+    fsm:
+      agents:
+      - initiator_responder: INITIATOR
+        name: fsm_in
+        type: fsm_in
+      - initiator_responder: INITIATOR
+        name: fsm_out
+        type: fsm_out
+      analysis_components:
+      - name: fsm_pred
+        parameters: []
+        type: fsm_predictor
+      - name: fsm_cov
+        parameters: []
+        type: fsm_coverage
+      analysis_exports: []
+      analysis_ports:
+      - connected_to: fsm_in.monitored_ap
+        name: fsm_in_ap
+        trans_type: fsm_in_transaction
+      - connected_to: fsm_out.monitored_ap
+        name: fsm_out_ap
+        trans_type: fsm_out_transaction
+      config_constraints: []
+      config_vars: []
+      existing_library_component: 'True'
+      hvl_pkg_parameters: []
+      non_uvmf_components: []
+      parameters: []
+      qvip_memory_agents: []
+      scoreboards:
+      - name: fsm_sb
+        sb_type: uvmf_in_order_race_scoreboard
+        trans_type: fsm_out_transaction
+      subenvs: []
+      tlm_connections:
+      - driver: fsm_in.monitored_ap
+        receiver: fsm_pred.fsm_in_ae
+        validate: 'True'
+      - driver: fsm_pred.fsm_sb_ap
+        receiver: fsm_sb.expected_analysis_export
+        validate: 'True'
+      - driver: fsm_out.monitored_ap
+        receiver: fsm_sb.actual_analysis_export
+        validate: 'True'
+      - driver: fsm_in.monitored_ap
+        receiver: fsm_cov.fsm_in_ae
+        validate: 'True'
+      - driver: fsm_out.monitored_ap
+        receiver: fsm_cov.fsm_out_ae
+        validate: 'True'

@@ -1,0 +1,25 @@
+BEGIN 3:fsm_out_if:fast__1:work
+    integrate_o :  1:hdl_top:fast:work 3:fsm_out_monitor_bfm:fast__1:work
+    auto_zero_o :  1:hdl_top:fast:work 3:fsm_out_monitor_bfm:fast__1:work
+    idle_o :  1:hdl_top:fast:work 3:fsm_out_monitor_bfm:fast__1:work
+    measurement_count_o :  1:hdl_top:fast:work 3:fsm_out_monitor_bfm:fast__1:work
+    interrupt_o :  1:hdl_top:fast:work 3:fsm_out_monitor_bfm:fast__1:work
+    rst_n_i :  3:fsm_out_monitor_bfm:fast__1:work
+    ref_sign_o :  1:hdl_top:fast:work 3:fsm_out_monitor_bfm:fast__1:work
+    clk_i :  3:fsm_out_monitor_bfm:fast__1:work
+    deintegrate_o :  1:hdl_top:fast:work 3:fsm_out_monitor_bfm:fast__1:work
+END 
+BEGIN 3:fsm_in_monitor_bfm:fast__1:work
+    proxy :  3:fsm_in_monitor_bfm:fast__1:work
+END 
+BEGIN 3:fsm_in_if:fast__1:work
+    clk_i :  3:fsm_in_driver_bfm:fast__1:work 3:fsm_in_monitor_bfm:fast__1:work
+    interrupt_clear_i :  3:fsm_in_driver_bfm:fast__1:work 1:hdl_top:fast:work 3:fsm_in_monitor_bfm:fast__1:work
+    trigger_i :  3:fsm_in_driver_bfm:fast__1:work 1:hdl_top:fast:work 3:fsm_in_monitor_bfm:fast__1:work
+    analog_ready_i :  3:fsm_in_driver_bfm:fast__1:work 1:hdl_top:fast:work 3:fsm_in_monitor_bfm:fast__1:work
+    comp_i :  3:fsm_in_driver_bfm:fast__1:work 1:hdl_top:fast:work 3:fsm_in_monitor_bfm:fast__1:work
+    rst_n_i :  3:fsm_in_driver_bfm:fast__1:work 3:fsm_in_monitor_bfm:fast__1:work
+END 
+BEGIN 3:fsm_out_monitor_bfm:fast__1:work
+    proxy :  3:fsm_out_monitor_bfm:fast__1:work
+END 

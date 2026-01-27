@@ -1,0 +1,89 @@
+uvmf:
+  interfaces:
+    fsm_out:
+      clock: clk_i
+      config_constraints: []
+      config_vars: []
+      existing_library_component: 'True'
+      gen_inbound_streaming_driver: 'False'
+      hdl_pkg_parameters: []
+      hdl_typedefs: []
+      hvl_pkg_parameters: []
+      hvl_typedefs: []
+      parameters: []
+      ports:
+      - dir: output
+        name: idle_o
+        reset_value: 1'b0
+        width: '1'
+      - dir: output
+        name: auto_zero_o
+        reset_value: 1'b0
+        width: '1'
+      - dir: output
+        name: integrate_o
+        reset_value: 1'b0
+        width: '1'
+      - dir: output
+        name: deintegrate_o
+        reset_value: 1'b0
+        width: '1'
+      - dir: output
+        name: ref_sign_o
+        reset_value: 1'b0
+        width: '1'
+      - dir: output
+        name: interrupt_o
+        reset_value: 1'b0
+        width: '1'
+      - dir: output
+        name: measurement_count_o
+        reset_value: 12'b000000000000
+        width: '12'
+      reset: rst_n_i
+      reset_assertion_level: 'False'
+      transaction_constraints: []
+      transaction_vars:
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: idle_o
+        type: bit
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: auto_zero_o
+        type: bit
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: integrate_o
+        type: bit
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: deintegrate_o
+        type: bit
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: ref_sign_o
+        type: bit
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: interrupt_o
+        type: bit
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: measurement_count_o
+        type: bit [11:0]
+        unpacked_dimension: ''
+      use_dpi_link: 'False'

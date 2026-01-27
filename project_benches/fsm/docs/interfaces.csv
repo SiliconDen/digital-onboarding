@@ -1,0 +1,14 @@
+//----------------------------------------------------------------------
+// Created with uvmf_gen version 2023.4_2
+//----------------------------------------------------------------------
+// pragma uvmf custom header begin
+// pragma uvmf custom header end
+//----------------------------------------------------------------------
+//----------------------------------------------------------------------
+//
+
+,
+Interface Description, Interface Type, Interface Transaction, Interface Name,
+fsm_in, fsm_in_driver_bfm fsm_in_monitor_bfm, fsm_in_transaction, fsm_in_pkg_fsm_in_BFM,
+fsm_out, fsm_out_driver_bfm fsm_out_monitor_bfm, fsm_out_transaction, fsm_out_pkg_fsm_out_BFM,
+

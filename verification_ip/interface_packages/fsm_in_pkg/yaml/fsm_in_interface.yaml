@@ -1,0 +1,59 @@
+uvmf:
+  interfaces:
+    fsm_in:
+      clock: clk_i
+      config_constraints: []
+      config_vars: []
+      existing_library_component: 'True'
+      gen_inbound_streaming_driver: 'False'
+      hdl_pkg_parameters: []
+      hdl_typedefs: []
+      hvl_pkg_parameters: []
+      hvl_typedefs: []
+      parameters: []
+      ports:
+      - dir: input
+        name: comp_i
+        reset_value: 1'b0
+        width: '1'
+      - dir: input
+        name: analog_ready_i
+        reset_value: 1'b0
+        width: '1'
+      - dir: input
+        name: trigger_i
+        reset_value: 1'b0
+        width: '1'
+      - dir: input
+        name: interrupt_clear_i
+        reset_value: '''b0'
+        width: '1'
+      reset: rst_n_i
+      reset_assertion_level: 'False'
+      transaction_constraints: []
+      transaction_vars:
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: comp_i
+        type: bit
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: analog_ready_i
+        type: bit
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'False'
+        isrand: 'False'
+        name: trigger_i
+        type: bit
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'False'
+        isrand: 'False'
+        name: interrupt_clear_i
+        type: bit
+        unpacked_dimension: ''
+      use_dpi_link: 'False'
