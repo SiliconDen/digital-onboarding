@@ -1,1 +1,0 @@
-/mnt/apps/public/COE/mg_apps/questa2025.1_1/questasim/linux_x86_64/VisualizerRls/bin/viscom -nolock -quiet -jmem_size 94667040 -debug -msglimit error -msglimitcount 20 +cover=bsf+/hdl_top/dut_verilog. -debug +designfile+design.bin hdl_top hvl_top -suppress 8887,2286 -work qrun.out/work -o qrun_opt
