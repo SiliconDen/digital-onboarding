@@ -18,10 +18,99 @@ class fsm_in_transaction  extends uvmf_transaction_base;
 
   `uvm_object_utils( fsm_in_transaction )
 
-  bit comp_i ;
+  rand bit comp_i ;
   bit analog_ready_i ;
   bit trigger_i ;
   bit interrupt_clear_i ;
+
+  rand bit [1:0] autorange_level ;
+  rand bit overflow ;
+  rand bit noise_sign ;
+
+  rand bit [11:0] normalrange ;
+  rand bit [11:0] underrange_1 ;
+  rand bit [11:0] underrange_2 ;
+  rand bit [11:0] underrange_3 ;
+  rand bit [11:0] noise_value_1 ;
+  rand bit [11:0] noise_value_2 ;
+  rand bit [11:0] noise_value_3 ;
+  rand bit [11:0] noise_value_4 ;
+  bit [11:0] measurement_count_1 ;
+  bit [11:0] measurement_count_2 ;
+  bit [11:0] measurement_count_3 ;
+  bit [11:0] measurement_count_4 ;
+
+  constraint range_c {
+    normalrange > 12'd360;
+    underrange1 < 12'd360;
+    underrange2 < 12'd360;
+    underrange3 < 12'd360;
+    underrange1 == (normalrange + 5) / 10;      
+    underrange2 == (normalrange + 50) / 100;    
+    underrange3 == (normalrange + 500) / 1000; 
+  }
+
+  constraint noise_c {
+    noise_value_1 <= (normalrange * 5) / 100;
+    noise_value_2 <= (underrange1 * 5) / 100;
+    noise_value_3 <= (underrange2 * 5) / 100;
+    noise_value_4 <= (underrange3 * 5) / 100;
+  }
+
+  function void post_randomize();
+    // reset measurement counts to 0
+    measurement_count_1 = 12'd0;
+    measurement_count_2 = 12'd0;
+    measurement_count_3 = 12'd0;
+    measurement_count_4 = 12'd0;
+
+    case (autorange_level)
+      2'b00: begin
+        if(overflow) begin
+          measurement_count_1 = 12'd4000;
+        end else begin
+          measurement_count_1 = normalrange;
+        end
+      end
+      2'b01: begin
+        if(overflow) begin
+          measurement_count_2 = 12'd4000;
+        end else begin
+          measurement_count_2 = normalrange;
+        end
+        measurement_count_1 = underrange1;
+      end
+      2'b10: begin
+        if(overflow) begin
+          measurement_count_3 = 12'd4000;
+        end else begin
+          measurement_count_3 = normalrange;
+        end
+        measurement_count_2 = underrange2;
+        measurement_count_1 = underrange1;
+      end
+      2'b11: begin
+        if(overflow) begin
+          measurement_count_4 = 12'd4000;
+        end else begin
+          measurement_count_4 = normalrange;
+        end
+        measurement_count_3 = underrange3;
+        measurement_count_2 = underrange2;
+        measurement_count_1 = underrange1;
+      end
+    endcase
+
+
+
+
+  endfunction
+
+
+
+
+  
+  
 
   //Constraints for the transaction variables:
 
