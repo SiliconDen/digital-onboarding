@@ -1,3 +1,4 @@
+module load questa
 export UVMF_HOME=/mnt/apps/public/COE/mg_apps/questa2025.1_1/questasim/examples/UVM_Framework/UVMF_2023.4_2
 export QUESTA_HOME=/mnt/apps/public/COE/mg_apps/questa2025.1_1/questasim
 make clean

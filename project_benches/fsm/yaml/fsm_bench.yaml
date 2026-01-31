@@ -7,8 +7,8 @@ uvmf:
       - bfm_name: fsm_out
         value: PASSIVE
       active_passive_default: ACTIVE
-      clock_half_period: 10ns
-      clock_phase_offset: 9ns
+      clock_half_period: 5ns
+      clock_phase_offset: 0ns
       existing_library_component: 'True'
       interface_params: []
       reset_assertion_level: 'False'

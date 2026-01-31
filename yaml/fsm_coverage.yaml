@@ -1,0 +1,7 @@
+uvmf:
+  util_components:
+    "fsm_coverage":
+      type: "coverage"
+      analysis_exports:
+      - name: "fsm_out_ae"
+        type: "fsm_out_transaction"

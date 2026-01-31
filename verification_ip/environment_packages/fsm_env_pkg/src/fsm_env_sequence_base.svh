@@ -32,16 +32,14 @@ class fsm_env_sequence_base #(
 
   // Initiator agent sequencers in fsm_environment:
     // configuration.fsm_in_config.sequencer
-    // configuration.fsm_out_config.sequencer
 
   // Responder agent sequencers in fsm_environment:
+    // configuration.fsm_out_config.sequencer
 
 
     typedef fsm_in_random_sequence fsm_in_random_sequence_t;
     fsm_in_random_sequence_t fsm_in_rand_seq;
 
-    typedef fsm_out_random_sequence fsm_out_random_sequence_t;
-    fsm_out_random_sequence_t fsm_out_rand_seq;
 
 
 // This example shows how to use the environment sequence base for sub-environments
@@ -56,7 +54,6 @@ class fsm_env_sequence_base #(
   function new(string name = "" );
     super.new(name);
     fsm_in_rand_seq = fsm_in_random_sequence_t::type_id::create("fsm_in_rand_seq");
-    fsm_out_rand_seq = fsm_out_random_sequence_t::type_id::create("fsm_out_rand_seq");
 
 
   endfunction
@@ -66,8 +63,6 @@ class fsm_env_sequence_base #(
   
     if ( configuration.fsm_in_config.sequencer != null )
        repeat (25) fsm_in_rand_seq.start(configuration.fsm_in_config.sequencer);
-    if ( configuration.fsm_out_config.sequencer != null )
-       repeat (25) fsm_out_rand_seq.start(configuration.fsm_out_config.sequencer);
 
 
   endtask

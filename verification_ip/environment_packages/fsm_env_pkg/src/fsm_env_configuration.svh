@@ -125,7 +125,7 @@ extends uvmf_environment_configuration_base;
      fsm_in_config.initiator_responder = INITIATOR;
      // fsm_in_config.has_coverage = 1;
      fsm_out_config.initialize( interface_activity[1], {environment_path,".fsm_out"}, interface_names[1]);
-     fsm_out_config.initiator_responder = INITIATOR;
+     fsm_out_config.initiator_responder = RESPONDER;
      // fsm_out_config.has_coverage = 1;
 
 

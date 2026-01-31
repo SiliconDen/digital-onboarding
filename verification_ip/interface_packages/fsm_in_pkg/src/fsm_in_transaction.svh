@@ -19,14 +19,14 @@ class fsm_in_transaction  extends uvmf_transaction_base;
   `uvm_object_utils( fsm_in_transaction )
 
   rand bit comp_i ;
-  bit analog_ready_i ;
-  bit trigger_i ;
-  bit interrupt_clear_i ;
+  bit [11:0] Measurement_count_1 ;
+  bit [11:0] Measurement_count_2 ;
+  bit [11:0] Measurement_count_3 ;
+  bit [11:0] Measurement_count_4 ;
 
   rand bit [1:0] autorange_level ;
   rand bit overflow ;
   rand bit noise_sign ;
-
   rand bit [11:0] normalrange ;
   rand bit [11:0] underrange_1 ;
   rand bit [11:0] underrange_2 ;
@@ -35,86 +35,27 @@ class fsm_in_transaction  extends uvmf_transaction_base;
   rand bit [11:0] noise_value_2 ;
   rand bit [11:0] noise_value_3 ;
   rand bit [11:0] noise_value_4 ;
-  bit [11:0] measurement_count_1 ;
-  bit [11:0] measurement_count_2 ;
-  bit [11:0] measurement_count_3 ;
-  bit [11:0] measurement_count_4 ;
 
-  constraint range_c {
-    normalrange > 12'd360;
-    underrange1 < 12'd360;
-    underrange2 < 12'd360;
-    underrange3 < 12'd360;
-    underrange1 == (normalrange + 5) / 10;      
-    underrange2 == (normalrange + 50) / 100;    
-    underrange3 == (normalrange + 500) / 1000; 
-  }
-
-  constraint noise_c {
-    noise_value_1 <= (normalrange * 5) / 100;
-    noise_value_2 <= (underrange1 * 5) / 100;
-    noise_value_3 <= (underrange2 * 5) / 100;
-    noise_value_4 <= (underrange3 * 5) / 100;
-  }
-
-  function void post_randomize();
-    // reset measurement counts to 0
-    measurement_count_1 = 12'd0;
-    measurement_count_2 = 12'd0;
-    measurement_count_3 = 12'd0;
-    measurement_count_4 = 12'd0;
-
-    case (autorange_level)
-      2'b00: begin
-        if(overflow) begin
-          measurement_count_1 = 12'd4000;
-        end else begin
-          measurement_count_1 = normalrange;
-        end
-      end
-      2'b01: begin
-        if(overflow) begin
-          measurement_count_2 = 12'd4000;
-        end else begin
-          measurement_count_2 = normalrange;
-        end
-        measurement_count_1 = underrange1;
-      end
-      2'b10: begin
-        if(overflow) begin
-          measurement_count_3 = 12'd4000;
-        end else begin
-          measurement_count_3 = normalrange;
-        end
-        measurement_count_2 = underrange2;
-        measurement_count_1 = underrange1;
-      end
-      2'b11: begin
-        if(overflow) begin
-          measurement_count_4 = 12'd4000;
-        end else begin
-          measurement_count_4 = normalrange;
-        end
-        measurement_count_3 = underrange3;
-        measurement_count_2 = underrange2;
-        measurement_count_1 = underrange1;
-      end
-    endcase
-
-
-
-
-  endfunction
-
-
-
-
-  
-  
 
   //Constraints for the transaction variables:
 
   // pragma uvmf custom class_item_additional begin
+  constraint range_c {
+    normalrange > 12'd360;
+    underrange_1 < 12'd360;
+    underrange_2 < 12'd360;
+    underrange_3 < 12'd360;
+    underrange_1 == (normalrange + 5) / 10;      
+    underrange_2 == (normalrange + 50) / 100;    
+    underrange_3 == (normalrange + 500) / 1000; 
+  }
+
+  constraint noise_c {
+    noise_value_1 <= (normalrange * 5) / 100;
+    noise_value_2 <= (underrange_1 * 5) / 100;
+    noise_value_3 <= (underrange_2 * 5) / 100;
+    noise_value_4 <= (underrange_3 * 5) / 100;
+  }
   // pragma uvmf custom class_item_additional end
 
   //*******************************************************************
@@ -193,7 +134,7 @@ class fsm_in_transaction  extends uvmf_transaction_base;
   virtual function string convert2string();
     // pragma uvmf custom convert2string begin
     // UVMF_CHANGE_ME : Customize format if desired.
-    return $sformatf("comp_i:0x%x analog_ready_i:0x%x trigger_i:0x%x interrupt_clear_i:0x%x ",comp_i,analog_ready_i,trigger_i,interrupt_clear_i);
+    return $sformatf("comp_i:0x%x Measurement_count_1:0x%x Measurement_count_2:0x%x Measurement_count_3:0x%x Measurement_count_4:0x%x ",comp_i,Measurement_count_1,Measurement_count_2,Measurement_count_3,Measurement_count_4);
     // pragma uvmf custom convert2string end
   endfunction
 
@@ -222,7 +163,10 @@ class fsm_in_transaction  extends uvmf_transaction_base;
     // UVMF_CHANGE_ME : Eliminate comparison of variables not to be used for compare
     return (super.do_compare(rhs,comparer)
             &&(this.comp_i == RHS.comp_i)
-            &&(this.analog_ready_i == RHS.analog_ready_i)
+            &&(this.Measurement_count_1 == RHS.Measurement_count_1)
+            &&(this.Measurement_count_2 == RHS.Measurement_count_2)
+            &&(this.Measurement_count_3 == RHS.Measurement_count_3)
+            &&(this.Measurement_count_4 == RHS.Measurement_count_4)
             );
     // pragma uvmf custom do_compare end
   endfunction
@@ -240,10 +184,73 @@ class fsm_in_transaction  extends uvmf_transaction_base;
     // pragma uvmf custom do_copy begin
     super.do_copy(rhs);
     this.comp_i = RHS.comp_i;
-    this.analog_ready_i = RHS.analog_ready_i;
-    this.trigger_i = RHS.trigger_i;
-    this.interrupt_clear_i = RHS.interrupt_clear_i;
+    this.Measurement_count_1 = RHS.Measurement_count_1;
+    this.Measurement_count_2 = RHS.Measurement_count_2;
+    this.Measurement_count_3 = RHS.Measurement_count_3;
+    this.Measurement_count_4 = RHS.Measurement_count_4;
     // pragma uvmf custom do_copy end
+  endfunction
+
+  // ****************************************************************************
+  // FUNCTION: post_randomize()
+  // This function is automatically called after the randomize() function.
+  //
+  function void post_randomize();
+    // pragma uvmf custom post_randomize begin
+    // reset measurement counts to 0
+    Measurement_count_1 = 12'd0;
+    Measurement_count_2 = 12'd0;
+    Measurement_count_3 = 12'd0;
+    Measurement_count_4 = 12'd0;
+
+    case (autorange_level)
+      2'b00: begin
+        if(overflow) begin
+          Measurement_count_1 = 12'd4000;
+        end else begin
+          Measurement_count_1 = normalrange;
+        end
+      end
+      2'b01: begin
+        if(overflow) begin
+          Measurement_count_2 = 12'd4000;
+        end else begin
+          Measurement_count_2 = normalrange;
+        end
+        Measurement_count_1 = underrange_1;
+      end
+      2'b10: begin
+        if(overflow) begin
+          Measurement_count_3 = 12'd4000;
+        end else begin
+          Measurement_count_3 = normalrange;
+        end
+        Measurement_count_2 = underrange_2;
+        Measurement_count_1 = underrange_1;
+      end
+      2'b11: begin
+        if(overflow) begin
+          Measurement_count_4 = 12'd4000;
+        end else begin
+          Measurement_count_4 = normalrange;
+        end
+        Measurement_count_3 = underrange_3;
+        Measurement_count_2 = underrange_2;
+        Measurement_count_1 = underrange_1;
+      end
+    endcase
+    if(noise_sign) begin
+      Measurement_count_1 = Measurement_count_1 + noise_value_1;
+      Measurement_count_2 = Measurement_count_2 - noise_value_2;
+      Measurement_count_3 = Measurement_count_3 + noise_value_3;
+      Measurement_count_4 = Measurement_count_4 + noise_value_4;
+    end else begin
+      Measurement_count_1 = Measurement_count_1 - noise_value_1;
+      Measurement_count_2 = Measurement_count_2 - noise_value_2;
+      Measurement_count_3 = Measurement_count_3 + noise_value_3;
+      Measurement_count_4 = Measurement_count_4 - noise_value_4;
+    end
+    // pragma uvmf custom post_randomize end
   endfunction
 
   // ****************************************************************************
@@ -267,9 +274,10 @@ class fsm_in_transaction  extends uvmf_transaction_base;
     // endcase
     // UVMF_CHANGE_ME : Eliminate transaction variables not wanted in transaction viewing in the waveform viewer
     $add_attribute(transaction_view_h,comp_i,"comp_i");
-    $add_attribute(transaction_view_h,analog_ready_i,"analog_ready_i");
-    $add_attribute(transaction_view_h,trigger_i,"trigger_i");
-    $add_attribute(transaction_view_h,interrupt_clear_i,"interrupt_clear_i");
+    $add_attribute(transaction_view_h,Measurement_count_1,"Measurement_count_1");
+    $add_attribute(transaction_view_h,Measurement_count_2,"Measurement_count_2");
+    $add_attribute(transaction_view_h,Measurement_count_3,"Measurement_count_3");
+    $add_attribute(transaction_view_h,Measurement_count_4,"Measurement_count_4");
     // pragma uvmf custom add_to_wave end
     $end_transaction(transaction_view_h,end_time);
     $free_transaction(transaction_view_h);

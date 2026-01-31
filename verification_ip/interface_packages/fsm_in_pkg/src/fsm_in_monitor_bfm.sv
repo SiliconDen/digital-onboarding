@@ -73,12 +73,14 @@ end
   tri  analog_ready_i_i;
   tri  trigger_i_i;
   tri  interrupt_clear_i_i;
+  tri  deintegrate_i_i;
   assign clk_i_i = bus.clk_i;
   assign rst_n_i_i = bus.rst_n_i;
   assign comp_i_i = bus.comp_i;
   assign analog_ready_i_i = bus.analog_ready_i;
   assign trigger_i_i = bus.trigger_i;
   assign interrupt_clear_i_i = bus.interrupt_clear_i;
+  assign deintegrate_i_i = bus.deintegrate_i;
 
   // Proxy handle to UVM monitor
   fsm_in_pkg::fsm_in_monitor  proxy;
@@ -149,9 +151,10 @@ end
     //
     // Available struct members:
     //     //    fsm_in_monitor_struct.comp_i
-    //     //    fsm_in_monitor_struct.analog_ready_i
-    //     //    fsm_in_monitor_struct.trigger_i
-    //     //    fsm_in_monitor_struct.interrupt_clear_i
+    //     //    fsm_in_monitor_struct.Measurement_count_1
+    //     //    fsm_in_monitor_struct.Measurement_count_2
+    //     //    fsm_in_monitor_struct.Measurement_count_3
+    //     //    fsm_in_monitor_struct.Measurement_count_4
     //     //
     // Reference code;
     //    How to wait for signal value
@@ -163,6 +166,7 @@ end
     //      fsm_in_monitor_struct.xyz = analog_ready_i_i;  //     
     //      fsm_in_monitor_struct.xyz = trigger_i_i;  //     
     //      fsm_in_monitor_struct.xyz = interrupt_clear_i_i;  //     
+    //      fsm_in_monitor_struct.xyz = deintegrate_i_i;  //     
     // pragma uvmf custom do_monitor begin
     // UVMF_CHANGE_ME : Implement protocol monitoring.  The commented reference code 
     // below are examples of how to capture signal values and assign them to 

@@ -18,13 +18,11 @@ class fsm_out_transaction  extends uvmf_transaction_base;
 
   `uvm_object_utils( fsm_out_transaction )
 
-  bit idle_o ;
-  bit auto_zero_o ;
-  bit integrate_o ;
-  bit deintegrate_o ;
   bit ref_sign_o ;
-  bit interrupt_o ;
-  bit [11:0] measurement_count_o ;
+  bit [11:0] measurement_count_1 ;
+  bit [11:0] measurement_count_2 ;
+  bit [11:0] measurement_count_3 ;
+  bit [11:0] measurement_count_4 ;
 
   //Constraints for the transaction variables:
 
@@ -107,7 +105,7 @@ class fsm_out_transaction  extends uvmf_transaction_base;
   virtual function string convert2string();
     // pragma uvmf custom convert2string begin
     // UVMF_CHANGE_ME : Customize format if desired.
-    return $sformatf("idle_o:0x%x auto_zero_o:0x%x integrate_o:0x%x deintegrate_o:0x%x ref_sign_o:0x%x interrupt_o:0x%x measurement_count_o:0x%x ",idle_o,auto_zero_o,integrate_o,deintegrate_o,ref_sign_o,interrupt_o,measurement_count_o);
+    return $sformatf("ref_sign_o:0x%x measurement_count_1:0x%x measurement_count_2:0x%x measurement_count_3:0x%x measurement_count_4:0x%x ",ref_sign_o,measurement_count_1,measurement_count_2,measurement_count_3,measurement_count_4);
     // pragma uvmf custom convert2string end
   endfunction
 
@@ -135,13 +133,11 @@ class fsm_out_transaction  extends uvmf_transaction_base;
     // pragma uvmf custom do_compare begin
     // UVMF_CHANGE_ME : Eliminate comparison of variables not to be used for compare
     return (super.do_compare(rhs,comparer)
-            &&(this.idle_o == RHS.idle_o)
-            &&(this.auto_zero_o == RHS.auto_zero_o)
-            &&(this.integrate_o == RHS.integrate_o)
-            &&(this.deintegrate_o == RHS.deintegrate_o)
             &&(this.ref_sign_o == RHS.ref_sign_o)
-            &&(this.interrupt_o == RHS.interrupt_o)
-            &&(this.measurement_count_o == RHS.measurement_count_o)
+            &&(this.measurement_count_1 == RHS.measurement_count_1)
+            &&(this.measurement_count_2 == RHS.measurement_count_2)
+            &&(this.measurement_count_3 == RHS.measurement_count_3)
+            &&(this.measurement_count_4 == RHS.measurement_count_4)
             );
     // pragma uvmf custom do_compare end
   endfunction
@@ -158,13 +154,11 @@ class fsm_out_transaction  extends uvmf_transaction_base;
     end
     // pragma uvmf custom do_copy begin
     super.do_copy(rhs);
-    this.idle_o = RHS.idle_o;
-    this.auto_zero_o = RHS.auto_zero_o;
-    this.integrate_o = RHS.integrate_o;
-    this.deintegrate_o = RHS.deintegrate_o;
     this.ref_sign_o = RHS.ref_sign_o;
-    this.interrupt_o = RHS.interrupt_o;
-    this.measurement_count_o = RHS.measurement_count_o;
+    this.measurement_count_1 = RHS.measurement_count_1;
+    this.measurement_count_2 = RHS.measurement_count_2;
+    this.measurement_count_3 = RHS.measurement_count_3;
+    this.measurement_count_4 = RHS.measurement_count_4;
     // pragma uvmf custom do_copy end
   endfunction
 
@@ -188,13 +182,11 @@ class fsm_out_transaction  extends uvmf_transaction_base;
     //   default : $add_color(transaction_view_h,"grey");
     // endcase
     // UVMF_CHANGE_ME : Eliminate transaction variables not wanted in transaction viewing in the waveform viewer
-    $add_attribute(transaction_view_h,idle_o,"idle_o");
-    $add_attribute(transaction_view_h,auto_zero_o,"auto_zero_o");
-    $add_attribute(transaction_view_h,integrate_o,"integrate_o");
-    $add_attribute(transaction_view_h,deintegrate_o,"deintegrate_o");
     $add_attribute(transaction_view_h,ref_sign_o,"ref_sign_o");
-    $add_attribute(transaction_view_h,interrupt_o,"interrupt_o");
-    $add_attribute(transaction_view_h,measurement_count_o,"measurement_count_o");
+    $add_attribute(transaction_view_h,measurement_count_1,"measurement_count_1");
+    $add_attribute(transaction_view_h,measurement_count_2,"measurement_count_2");
+    $add_attribute(transaction_view_h,measurement_count_3,"measurement_count_3");
+    $add_attribute(transaction_view_h,measurement_count_4,"measurement_count_4");
     // pragma uvmf custom add_to_wave end
     $end_transaction(transaction_view_h,end_time);
     $free_transaction(transaction_view_h);

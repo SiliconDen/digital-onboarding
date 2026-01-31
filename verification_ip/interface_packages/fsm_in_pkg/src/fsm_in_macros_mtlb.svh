@@ -50,9 +50,10 @@ typedef struct packed  { \
 //
   `define fsm_in_MONITOR_STRUCT typedef struct packed  { \
   bit _comp_i ; \
-  bit _analog_ready_i ; \
-  bit _trigger_i ; \
-  bit _interrupt_clear_i ; \
+  bit [11:0] _Measurement_count_1 ; \
+  bit [11:0] _Measurement_count_2 ; \
+  bit [11:0] _Measurement_count_3 ; \
+  bit [11:0] _Measurement_count_4 ; \
      } fsm_in_monitor_s;
 
   `define fsm_in_TO_MONITOR_STRUCT_FUNCTION \
@@ -60,9 +61,10 @@ typedef struct packed  { \
     fsm_in_monitor_struct = \
             { \
             this._comp_i , \
-            this._analog_ready_i , \
-            this._trigger_i , \
-            this._interrupt_clear_i  \
+            this._Measurement_count_1 , \
+            this._Measurement_count_2 , \
+            this._Measurement_count_3 , \
+            this._Measurement_count_4  \
             };\
     return ( fsm_in_monitor_struct);\
   endfunction\
@@ -71,9 +73,10 @@ typedef struct packed  { \
   virtual function void from_monitor_struct(fsm_in_monitor_s fsm_in_monitor_struct);\
             {\
             this._comp_i , \
-            this._analog_ready_i , \
-            this._trigger_i , \
-            this._interrupt_clear_i  \
+            this._Measurement_count_1 , \
+            this._Measurement_count_2 , \
+            this._Measurement_count_3 , \
+            this._Measurement_count_4  \
             } = fsm_in_monitor_struct;\
   endfunction
 
@@ -84,9 +87,10 @@ typedef struct packed  { \
 //
   `define fsm_in_INITIATOR_STRUCT typedef struct packed  { \
   bit _comp_i ; \
-  bit _analog_ready_i ; \
-  bit _trigger_i ; \
-  bit _interrupt_clear_i ; \
+  bit [11:0] _Measurement_count_1 ; \
+  bit [11:0] _Measurement_count_2 ; \
+  bit [11:0] _Measurement_count_3 ; \
+  bit [11:0] _Measurement_count_4 ; \
      } fsm_in_initiator_s;
 
   `define fsm_in_TO_INITIATOR_STRUCT_FUNCTION \
@@ -94,9 +98,10 @@ typedef struct packed  { \
     fsm_in_initiator_struct = \
            {\
            this._comp_i , \
-           this._analog_ready_i , \
-           this._trigger_i , \
-           this._interrupt_clear_i  \
+           this._Measurement_count_1 , \
+           this._Measurement_count_2 , \
+           this._Measurement_count_3 , \
+           this._Measurement_count_4  \
            };\
     return ( fsm_in_initiator_struct);\
   endfunction
@@ -105,9 +110,10 @@ typedef struct packed  { \
   virtual function void from_initiator_struct(fsm_in_initiator_s fsm_in_initiator_struct);\
            {\
            this._comp_i , \
-           this._analog_ready_i , \
-           this._trigger_i , \
-           this._interrupt_clear_i  \
+           this._Measurement_count_1 , \
+           this._Measurement_count_2 , \
+           this._Measurement_count_3 , \
+           this._Measurement_count_4  \
            } = fsm_in_initiator_struct;\
   endfunction
 
@@ -118,9 +124,10 @@ typedef struct packed  { \
 //
   `define fsm_in_RESPONDER_STRUCT typedef struct packed  { \
   bit _comp_i ; \
-  bit _analog_ready_i ; \
-  bit _trigger_i ; \
-  bit _interrupt_clear_i ; \
+  bit [11:0] _Measurement_count_1 ; \
+  bit [11:0] _Measurement_count_2 ; \
+  bit [11:0] _Measurement_count_3 ; \
+  bit [11:0] _Measurement_count_4 ; \
      } fsm_in_responder_s;
 
   `define fsm_in_TO_RESPONDER_STRUCT_FUNCTION \
@@ -128,9 +135,10 @@ typedef struct packed  { \
     fsm_in_responder_struct = \
            {\
            this._comp_i , \
-           this._analog_ready_i , \
-           this._trigger_i , \
-           this._interrupt_clear_i  \
+           this._Measurement_count_1 , \
+           this._Measurement_count_2 , \
+           this._Measurement_count_3 , \
+           this._Measurement_count_4  \
            };\
     return ( fsm_in_responder_struct);\
   endfunction
@@ -139,9 +147,10 @@ typedef struct packed  { \
   virtual function void from_responder_struct(fsm_in_responder_s fsm_in_responder_struct);\
            {\
            this._comp_i , \
-           this._analog_ready_i , \
-           this._trigger_i , \
-           this._interrupt_clear_i  \
+           this._Measurement_count_1 , \
+           this._Measurement_count_2 , \
+           this._Measurement_count_3 , \
+           this._Measurement_count_4  \
            } = fsm_in_responder_struct;\
   endfunction
 // pragma uvmf custom additional begin

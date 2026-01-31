@@ -33,10 +33,10 @@ import uvmf_base_pkg_hdl::*;
   // tbx clkgen
   initial begin
     clk = 0;
-    #9ns;
+    #0ns;
     forever begin
       clk = ~clk;
-      #10ns;
+      #5ns;
     end
   end
 // pragma uvmf custom clock_generator end
@@ -53,6 +53,21 @@ import uvmf_base_pkg_hdl::*;
 // pragma uvmf custom reset_generator end
 
   // pragma uvmf custom module_item_additional begin
+  // Wires for fsm_in interface signals
+  tri comp_i_w;
+  tri analog_ready_i_w;
+  tri trigger_i_w;
+  tri interrupt_clear_i_w;
+  tri deintegrate_i_w;
+
+  // Wires for fsm_out interface signals
+  tri idle_o_w;
+  tri auto_zero_o_w;
+  tri integrate_o_w;
+  tri deintegrate_o_w;
+  tri ref_sign_o_w;
+  tri interrupt_o_w;
+  tri [11:0] measurement_count_o_w;
   // pragma uvmf custom module_item_additional end
 
   // Instantiate the signal bundle, monitor bfm and driver bfm for each interface.
@@ -61,12 +76,26 @@ import uvmf_base_pkg_hdl::*;
   // The driver, driver_bfm, drives transactions onto the bus, _if.
   fsm_in_if  fsm_in_bus(
      // pragma uvmf custom fsm_in_bus_connections begin
-     .clk_i(clk), .rst_n_i(rst)
+     .clk_i(clk), 
+     .rst_n_i(rst),
+     .comp_i(comp_i_w),
+     .analog_ready_i(analog_ready_i_w),
+     .trigger_i(trigger_i_w),
+     .interrupt_clear_i(interrupt_clear_i_w),
+     .deintegrate_i(deintegrate_i_w)
      // pragma uvmf custom fsm_in_bus_connections end
      );
   fsm_out_if  fsm_out_bus(
      // pragma uvmf custom fsm_out_bus_connections begin
-     .clk_i(clk), .rst_n_i(rst)
+     .clk_i(clk), 
+     .rst_n_i(rst),
+     .idle_o(idle_o_w),
+     .auto_zero_o(auto_zero_o_w),
+     .integrate_o(integrate_o_w),
+     .deintegrate_o(deintegrate_o_w),
+     .ref_sign_o(ref_sign_o_w),
+     .interrupt_o(interrupt_o_w),
+     .measurement_count_o(measurement_count_o_w)
      // pragma uvmf custom fsm_out_bus_connections end
      );
   fsm_in_monitor_bfm  fsm_in_mon_bfm(fsm_in_bus);
@@ -75,7 +104,7 @@ import uvmf_base_pkg_hdl::*;
 
   // pragma uvmf custom dut_instantiation begin
   // Instantiate digital_top DUT
-  digital_top dut (
+  digital_top dut_verilog (
       // System Clock and Reset
       .clk_i(clk),
       .rst_n_i(rst),
@@ -99,6 +128,7 @@ import uvmf_base_pkg_hdl::*;
       .interrupt_o(fsm_out_bus.interrupt_o),
       .measurement_count_o(fsm_out_bus.measurement_count_o)
   );
+  assign fsm_in_bus.deintegrate_i = fsm_out_bus.deintegrate_o;
   // pragma uvmf custom dut_instantiation end
 
   initial begin      // tbx vif_binding_block 

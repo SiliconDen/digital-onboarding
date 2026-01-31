@@ -154,13 +154,11 @@ end
   task do_monitor(output fsm_out_monitor_s fsm_out_monitor_struct);
     //
     // Available struct members:
-    //     //    fsm_out_monitor_struct.idle_o
-    //     //    fsm_out_monitor_struct.auto_zero_o
-    //     //    fsm_out_monitor_struct.integrate_o
-    //     //    fsm_out_monitor_struct.deintegrate_o
     //     //    fsm_out_monitor_struct.ref_sign_o
-    //     //    fsm_out_monitor_struct.interrupt_o
-    //     //    fsm_out_monitor_struct.measurement_count_o
+    //     //    fsm_out_monitor_struct.measurement_count_1
+    //     //    fsm_out_monitor_struct.measurement_count_2
+    //     //    fsm_out_monitor_struct.measurement_count_3
+    //     //    fsm_out_monitor_struct.measurement_count_4
     //     //
     // Reference code;
     //    How to wait for signal value

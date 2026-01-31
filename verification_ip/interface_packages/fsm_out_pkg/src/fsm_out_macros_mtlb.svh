@@ -49,26 +49,22 @@ typedef struct packed  { \
 //      and from_monitor_struct methods of the fsm_out_transaction class.
 //
   `define fsm_out_MONITOR_STRUCT typedef struct packed  { \
-  bit _idle_o ; \
-  bit _auto_zero_o ; \
-  bit _integrate_o ; \
-  bit _deintegrate_o ; \
   bit _ref_sign_o ; \
-  bit _interrupt_o ; \
-  bit [11:0] _measurement_count_o ; \
+  bit [11:0] _measurement_count_1 ; \
+  bit [11:0] _measurement_count_2 ; \
+  bit [11:0] _measurement_count_3 ; \
+  bit [11:0] _measurement_count_4 ; \
      } fsm_out_monitor_s;
 
   `define fsm_out_TO_MONITOR_STRUCT_FUNCTION \
   virtual function fsm_out_monitor_s to_monitor_struct();\
     fsm_out_monitor_struct = \
             { \
-            this._idle_o , \
-            this._auto_zero_o , \
-            this._integrate_o , \
-            this._deintegrate_o , \
             this._ref_sign_o , \
-            this._interrupt_o , \
-            this._measurement_count_o  \
+            this._measurement_count_1 , \
+            this._measurement_count_2 , \
+            this._measurement_count_3 , \
+            this._measurement_count_4  \
             };\
     return ( fsm_out_monitor_struct);\
   endfunction\
@@ -76,13 +72,11 @@ typedef struct packed  { \
   `define fsm_out_FROM_MONITOR_STRUCT_FUNCTION \
   virtual function void from_monitor_struct(fsm_out_monitor_s fsm_out_monitor_struct);\
             {\
-            this._idle_o , \
-            this._auto_zero_o , \
-            this._integrate_o , \
-            this._deintegrate_o , \
             this._ref_sign_o , \
-            this._interrupt_o , \
-            this._measurement_count_o  \
+            this._measurement_count_1 , \
+            this._measurement_count_2 , \
+            this._measurement_count_3 , \
+            this._measurement_count_4  \
             } = fsm_out_monitor_struct;\
   endfunction
 
@@ -92,26 +86,22 @@ typedef struct packed  { \
 //      Also update the comments in the driver BFM.
 //
   `define fsm_out_INITIATOR_STRUCT typedef struct packed  { \
-  bit _idle_o ; \
-  bit _auto_zero_o ; \
-  bit _integrate_o ; \
-  bit _deintegrate_o ; \
   bit _ref_sign_o ; \
-  bit _interrupt_o ; \
-  bit [11:0] _measurement_count_o ; \
+  bit [11:0] _measurement_count_1 ; \
+  bit [11:0] _measurement_count_2 ; \
+  bit [11:0] _measurement_count_3 ; \
+  bit [11:0] _measurement_count_4 ; \
      } fsm_out_initiator_s;
 
   `define fsm_out_TO_INITIATOR_STRUCT_FUNCTION \
   virtual function fsm_out_initiator_s to_initiator_struct();\
     fsm_out_initiator_struct = \
            {\
-           this._idle_o , \
-           this._auto_zero_o , \
-           this._integrate_o , \
-           this._deintegrate_o , \
            this._ref_sign_o , \
-           this._interrupt_o , \
-           this._measurement_count_o  \
+           this._measurement_count_1 , \
+           this._measurement_count_2 , \
+           this._measurement_count_3 , \
+           this._measurement_count_4  \
            };\
     return ( fsm_out_initiator_struct);\
   endfunction
@@ -119,13 +109,11 @@ typedef struct packed  { \
   `define fsm_out_FROM_INITIATOR_STRUCT_FUNCTION \
   virtual function void from_initiator_struct(fsm_out_initiator_s fsm_out_initiator_struct);\
            {\
-           this._idle_o , \
-           this._auto_zero_o , \
-           this._integrate_o , \
-           this._deintegrate_o , \
            this._ref_sign_o , \
-           this._interrupt_o , \
-           this._measurement_count_o  \
+           this._measurement_count_1 , \
+           this._measurement_count_2 , \
+           this._measurement_count_3 , \
+           this._measurement_count_4  \
            } = fsm_out_initiator_struct;\
   endfunction
 
@@ -135,26 +123,22 @@ typedef struct packed  { \
 //      Also update the comments in the driver BFM.
 //
   `define fsm_out_RESPONDER_STRUCT typedef struct packed  { \
-  bit _idle_o ; \
-  bit _auto_zero_o ; \
-  bit _integrate_o ; \
-  bit _deintegrate_o ; \
   bit _ref_sign_o ; \
-  bit _interrupt_o ; \
-  bit [11:0] _measurement_count_o ; \
+  bit [11:0] _measurement_count_1 ; \
+  bit [11:0] _measurement_count_2 ; \
+  bit [11:0] _measurement_count_3 ; \
+  bit [11:0] _measurement_count_4 ; \
      } fsm_out_responder_s;
 
   `define fsm_out_TO_RESPONDER_STRUCT_FUNCTION \
   virtual function fsm_out_responder_s to_responder_struct();\
     fsm_out_responder_struct = \
            {\
-           this._idle_o , \
-           this._auto_zero_o , \
-           this._integrate_o , \
-           this._deintegrate_o , \
            this._ref_sign_o , \
-           this._interrupt_o , \
-           this._measurement_count_o  \
+           this._measurement_count_1 , \
+           this._measurement_count_2 , \
+           this._measurement_count_3 , \
+           this._measurement_count_4  \
            };\
     return ( fsm_out_responder_struct);\
   endfunction
@@ -162,13 +146,11 @@ typedef struct packed  { \
   `define fsm_out_FROM_RESPONDER_STRUCT_FUNCTION \
   virtual function void from_responder_struct(fsm_out_responder_s fsm_out_responder_struct);\
            {\
-           this._idle_o , \
-           this._auto_zero_o , \
-           this._integrate_o , \
-           this._deintegrate_o , \
            this._ref_sign_o , \
-           this._interrupt_o , \
-           this._measurement_count_o  \
+           this._measurement_count_1 , \
+           this._measurement_count_2 , \
+           this._measurement_count_3 , \
+           this._measurement_count_4  \
            } = fsm_out_responder_struct;\
   endfunction
 // pragma uvmf custom additional begin

@@ -1,0 +1,13 @@
+uvmf:
+  benches:
+    "fsm":
+      top_env: "fsm"
+      clock_half_period: "5ns"
+      clock_phase_offset: "0ns"
+      reset_assertion_level: "False"
+      reset_duration: "250ns"
+      active_passive:
+      - bfm_name: "fsm_in"
+        value: "ACTIVE"
+      - bfm_name: "fsm_out"
+        value: "PASSIVE"

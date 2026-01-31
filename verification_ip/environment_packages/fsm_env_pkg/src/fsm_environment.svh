@@ -104,7 +104,6 @@ class fsm_environment  extends uvmf_environment_base #(
     fsm_in.monitored_ap.connect(fsm_pred.fsm_in_ae);
     fsm_pred.fsm_sb_ap.connect(fsm_sb.expected_analysis_export);
     fsm_out.monitored_ap.connect(fsm_sb.actual_analysis_export);
-    fsm_in.monitored_ap.connect(fsm_cov.fsm_in_ae);
     fsm_out.monitored_ap.connect(fsm_cov.fsm_out_ae);
     fsm_in.monitored_ap.connect(fsm_in_ap);
     fsm_out.monitored_ap.connect(fsm_out_ap);

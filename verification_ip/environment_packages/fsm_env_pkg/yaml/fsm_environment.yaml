@@ -5,7 +5,7 @@ uvmf:
       - initiator_responder: INITIATOR
         name: fsm_in
         type: fsm_in
-      - initiator_responder: INITIATOR
+      - initiator_responder: RESPONDER
         name: fsm_out
         type: fsm_out
       analysis_components:
@@ -44,9 +44,6 @@ uvmf:
         validate: 'True'
       - driver: fsm_out.monitored_ap
         receiver: fsm_sb.actual_analysis_export
-        validate: 'True'
-      - driver: fsm_in.monitored_ap
-        receiver: fsm_cov.fsm_in_ae
         validate: 'True'
       - driver: fsm_out.monitored_ap
         receiver: fsm_cov.fsm_out_ae

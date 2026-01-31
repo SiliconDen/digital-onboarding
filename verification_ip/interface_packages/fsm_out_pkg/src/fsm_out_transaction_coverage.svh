@@ -29,13 +29,11 @@ class fsm_out_transaction_coverage  extends uvm_subscriber #(.T(fsm_out_transact
     // UVMF_CHANGE_ME : Add coverage bins, crosses, exclusions, etc. according to coverage needs.
     option.auto_bin_max=1024;
     option.per_instance=1;
-    idle_o: coverpoint coverage_trans.idle_o;
-    auto_zero_o: coverpoint coverage_trans.auto_zero_o;
-    integrate_o: coverpoint coverage_trans.integrate_o;
-    deintegrate_o: coverpoint coverage_trans.deintegrate_o;
     ref_sign_o: coverpoint coverage_trans.ref_sign_o;
-    interrupt_o: coverpoint coverage_trans.interrupt_o;
-    measurement_count_o: coverpoint coverage_trans.measurement_count_o;
+    measurement_count_1: coverpoint coverage_trans.measurement_count_1;
+    measurement_count_2: coverpoint coverage_trans.measurement_count_2;
+    measurement_count_3: coverpoint coverage_trans.measurement_count_3;
+    measurement_count_4: coverpoint coverage_trans.measurement_count_4;
     // pragma uvmf custom covergroup end
   endgroup
 

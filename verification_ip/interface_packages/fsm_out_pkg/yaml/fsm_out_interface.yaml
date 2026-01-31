@@ -47,43 +47,31 @@ uvmf:
       - comment: ''
         iscompare: 'True'
         isrand: 'False'
-        name: idle_o
-        type: bit
-        unpacked_dimension: ''
-      - comment: ''
-        iscompare: 'True'
-        isrand: 'False'
-        name: auto_zero_o
-        type: bit
-        unpacked_dimension: ''
-      - comment: ''
-        iscompare: 'True'
-        isrand: 'False'
-        name: integrate_o
-        type: bit
-        unpacked_dimension: ''
-      - comment: ''
-        iscompare: 'True'
-        isrand: 'False'
-        name: deintegrate_o
-        type: bit
-        unpacked_dimension: ''
-      - comment: ''
-        iscompare: 'True'
-        isrand: 'False'
         name: ref_sign_o
         type: bit
         unpacked_dimension: ''
       - comment: ''
         iscompare: 'True'
         isrand: 'False'
-        name: interrupt_o
-        type: bit
+        name: measurement_count_1
+        type: bit [11:0]
         unpacked_dimension: ''
       - comment: ''
         iscompare: 'True'
         isrand: 'False'
-        name: measurement_count_o
+        name: measurement_count_2
+        type: bit [11:0]
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: measurement_count_3
+        type: bit [11:0]
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: measurement_count_4
         type: bit [11:0]
         unpacked_dimension: ''
       use_dpi_link: 'False'

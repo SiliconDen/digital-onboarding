@@ -26,7 +26,11 @@ uvmf:
         width: '1'
       - dir: input
         name: interrupt_clear_i
-        reset_value: '''b0'
+        reset_value: 1'b0
+        width: '1'
+      - dir: input
+        name: deintegrate_i
+        reset_value: 1'b0
         width: '1'
       reset: rst_n_i
       reset_assertion_level: 'False'
@@ -34,26 +38,32 @@ uvmf:
       transaction_vars:
       - comment: ''
         iscompare: 'True'
-        isrand: 'False'
+        isrand: 'True'
         name: comp_i
         type: bit
         unpacked_dimension: ''
       - comment: ''
         iscompare: 'True'
         isrand: 'False'
-        name: analog_ready_i
-        type: bit
+        name: Measurement_count_1
+        type: bit [11:0]
         unpacked_dimension: ''
       - comment: ''
-        iscompare: 'False'
+        iscompare: 'True'
         isrand: 'False'
-        name: trigger_i
-        type: bit
+        name: Measurement_count_2
+        type: bit [11:0]
         unpacked_dimension: ''
       - comment: ''
-        iscompare: 'False'
+        iscompare: 'True'
         isrand: 'False'
-        name: interrupt_clear_i
-        type: bit
+        name: Measurement_count_3
+        type: bit [11:0]
+        unpacked_dimension: ''
+      - comment: ''
+        iscompare: 'True'
+        isrand: 'False'
+        name: Measurement_count_4
+        type: bit [11:0]
         unpacked_dimension: ''
       use_dpi_link: 'False'

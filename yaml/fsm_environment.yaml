@@ -1,0 +1,35 @@
+uvmf:
+  environments:
+    "fsm":
+      agents:
+      - initiator_responder: "INITIATOR"
+        name: "fsm_in"
+        type: "fsm_in"
+      - initiator_responder: "RESPONDER"
+        name: "fsm_out"
+        type: "fsm_out"
+      analysis_components:
+      - name: "fsm_pred"
+        type: "fsm_predictor"
+      - name: "fsm_cov"
+        type: "fsm_coverage"
+      analysis_ports:
+      - name: "fsm_in_ap"
+        connected_to: "fsm_in.monitored_ap"
+        trans_type: "fsm_in_transaction"
+      - name: "fsm_out_ap"
+        connected_to: "fsm_out.monitored_ap"
+        trans_type: "fsm_out_transaction"
+      scoreboards:
+      - name: "fsm_sb"
+        sb_type: "uvmf_in_order_race_scoreboard"
+        trans_type: "fsm_out_transaction"
+      tlm_connections:
+      - driver: "fsm_in.monitored_ap"
+        receiver: "fsm_pred.fsm_in_ae"
+      - driver: "fsm_pred.fsm_sb_ap"
+        receiver: "fsm_sb.expected_analysis_export"
+      - driver: "fsm_out.monitored_ap"
+        receiver: "fsm_sb.actual_analysis_export"
+      - driver: "fsm_out.monitored_ap"
+        receiver: "fsm_cov.fsm_out_ae"

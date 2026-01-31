@@ -210,21 +210,17 @@ end
        );// pragma tbx xtf  
        // 
        // Members within the fsm_out_initiator_struct:
-       //   bit idle_o ;
-       //   bit auto_zero_o ;
-       //   bit integrate_o ;
-       //   bit deintegrate_o ;
        //   bit ref_sign_o ;
-       //   bit interrupt_o ;
-       //   bit [11:0] measurement_count_o ;
+       //   bit [11:0] measurement_count_1 ;
+       //   bit [11:0] measurement_count_2 ;
+       //   bit [11:0] measurement_count_3 ;
+       //   bit [11:0] measurement_count_4 ;
        // Members within the fsm_out_responder_struct:
-       //   bit idle_o ;
-       //   bit auto_zero_o ;
-       //   bit integrate_o ;
-       //   bit deintegrate_o ;
        //   bit ref_sign_o ;
-       //   bit interrupt_o ;
-       //   bit [11:0] measurement_count_o ;
+       //   bit [11:0] measurement_count_1 ;
+       //   bit [11:0] measurement_count_2 ;
+       //   bit [11:0] measurement_count_3 ;
+       //   bit [11:0] measurement_count_4 ;
        initiator_struct = fsm_out_initiator_struct;
        //
        // Reference code;
@@ -277,21 +273,17 @@ bit first_transfer=1;
        input fsm_out_responder_s fsm_out_responder_struct 
        );// pragma tbx xtf   
   // Variables within the fsm_out_initiator_struct:
-  //   bit idle_o ;
-  //   bit auto_zero_o ;
-  //   bit integrate_o ;
-  //   bit deintegrate_o ;
   //   bit ref_sign_o ;
-  //   bit interrupt_o ;
-  //   bit [11:0] measurement_count_o ;
+  //   bit [11:0] measurement_count_1 ;
+  //   bit [11:0] measurement_count_2 ;
+  //   bit [11:0] measurement_count_3 ;
+  //   bit [11:0] measurement_count_4 ;
   // Variables within the fsm_out_responder_struct:
-  //   bit idle_o ;
-  //   bit auto_zero_o ;
-  //   bit integrate_o ;
-  //   bit deintegrate_o ;
   //   bit ref_sign_o ;
-  //   bit interrupt_o ;
-  //   bit [11:0] measurement_count_o ;
+  //   bit [11:0] measurement_count_1 ;
+  //   bit [11:0] measurement_count_2 ;
+  //   bit [11:0] measurement_count_3 ;
+  //   bit [11:0] measurement_count_4 ;
        // Reference code;
        //    How to wait for signal value
        //      while (control_signal == 1'b1) @(posedge clk_i_i);

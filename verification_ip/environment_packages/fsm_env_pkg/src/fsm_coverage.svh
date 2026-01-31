@@ -15,7 +15,6 @@
 //   This analysis component has the following analysis_exports that receive the 
 //   listed transaction type.
 //   
-//   fsm_in_ae receives transactions of type  fsm_in_transaction  
 //   fsm_out_ae receives transactions of type  fsm_out_transaction  
 //
 //   This analysis component has the following analysis_ports that can broadcast 
@@ -45,11 +44,6 @@ class fsm_coverage #(
 
   
   // Instantiate the analysis exports
-  uvm_analysis_imp_fsm_in_ae #(fsm_in_transaction, fsm_coverage #(
-                              .CONFIG_T(CONFIG_T),
-                              .BASE_T(BASE_T)
-                              )
-) fsm_in_ae;
   uvm_analysis_imp_fsm_out_ae #(fsm_out_transaction, fsm_coverage #(
                               .CONFIG_T(CONFIG_T),
                               .BASE_T(BASE_T)
@@ -88,27 +82,11 @@ class fsm_coverage #(
 
     fsm_coverage_cg.set_inst_name($sformatf("fsm_coverage_cg_%s",get_full_name()));
 
-    fsm_in_ae = new("fsm_in_ae", this);
     fsm_out_ae = new("fsm_out_ae", this);
   // pragma uvmf custom build_phase begin
   // pragma uvmf custom build_phase end
   endfunction
 
-  // ****************************************************************************
-  // FUNCTION: write_fsm_in_ae
-  // Transactions received through fsm_in_ae initiate the execution of this function.
-  // This function collects functional coverage on variables within the received transaction
-  virtual function void write_fsm_in_ae(fsm_in_transaction t);
-    // pragma uvmf custom fsm_in_ae_coverage begin
-    `uvm_info("COV", "Transaction Received through fsm_in_ae", UVM_MEDIUM)
-    `uvm_info("COV", {"            Data: ",t.convert2string()}, UVM_FULL)
-
-    //  UVMF_CHANGE_ME: Add functional coverage to this component to implement coverage model.  
-    `uvm_info("UNIMPLEMENTED_COVERAGE_MODEL", "******************************************************************************************************",UVM_NONE)
-    `uvm_info("UNIMPLEMENTED_COVERAGE_MODEL", "UVMF_CHANGE_ME: This component needs to be completed with coverage model",UVM_NONE)
-    `uvm_info("UNIMPLEMENTED_COVERAGE_MODEL", "******************************************************************************************************",UVM_NONE)
-    // pragma uvmf custom fsm_in_ae_coverage end
-  endfunction
   // ****************************************************************************
   // FUNCTION: write_fsm_out_ae
   // Transactions received through fsm_out_ae initiate the execution of this function.

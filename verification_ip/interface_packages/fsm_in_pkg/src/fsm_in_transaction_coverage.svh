@@ -30,9 +30,10 @@ class fsm_in_transaction_coverage  extends uvm_subscriber #(.T(fsm_in_transactio
     option.auto_bin_max=1024;
     option.per_instance=1;
     comp_i: coverpoint coverage_trans.comp_i;
-    analog_ready_i: coverpoint coverage_trans.analog_ready_i;
-    trigger_i: coverpoint coverage_trans.trigger_i;
-    interrupt_clear_i: coverpoint coverage_trans.interrupt_clear_i;
+    Measurement_count_1: coverpoint coverage_trans.Measurement_count_1;
+    Measurement_count_2: coverpoint coverage_trans.Measurement_count_2;
+    Measurement_count_3: coverpoint coverage_trans.Measurement_count_3;
+    Measurement_count_4: coverpoint coverage_trans.Measurement_count_4;
     // pragma uvmf custom covergroup end
   endgroup
 

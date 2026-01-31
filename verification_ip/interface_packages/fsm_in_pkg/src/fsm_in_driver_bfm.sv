@@ -97,7 +97,9 @@ end
   tri  trigger_i_i;
   reg  trigger_i_o = 1'b0;
   tri  interrupt_clear_i_i;
-  reg  interrupt_clear_i_o = 'b0;
+  reg  interrupt_clear_i_o = 1'b0;
+  tri  deintegrate_i_i;
+  reg  deintegrate_i_o = 1'b0;
 
   // INITIATOR mode output signals
 
@@ -117,6 +119,8 @@ end
   assign bus.trigger_i = (initiator_responder == RESPONDER) ? trigger_i_o : 'bz;
   assign interrupt_clear_i_i = bus.interrupt_clear_i;
   assign bus.interrupt_clear_i = (initiator_responder == RESPONDER) ? interrupt_clear_i_o : 'bz;
+  assign deintegrate_i_i = bus.deintegrate_i;
+  assign bus.deintegrate_i = (initiator_responder == RESPONDER) ? deintegrate_i_o : 'bz;
 
 
   // These are signals marked as 'output' by the config file, but the outputs will
@@ -154,7 +158,8 @@ end
        comp_i_o <= 1'b0;
        analog_ready_i_o <= 1'b0;
        trigger_i_o <= 1'b0;
-       interrupt_clear_i_o <= 'b0;
+       interrupt_clear_i_o <= 1'b0;
+       deintegrate_i_o <= 1'b0;
        // INITIATOR mode output signals
        // Bi-directional signals
  
@@ -196,14 +201,16 @@ end
        // 
        // Members within the fsm_in_initiator_struct:
        //   bit comp_i ;
-       //   bit analog_ready_i ;
-       //   bit trigger_i ;
-       //   bit interrupt_clear_i ;
+       //   bit [11:0] Measurement_count_1 ;
+       //   bit [11:0] Measurement_count_2 ;
+       //   bit [11:0] Measurement_count_3 ;
+       //   bit [11:0] Measurement_count_4 ;
        // Members within the fsm_in_responder_struct:
        //   bit comp_i ;
-       //   bit analog_ready_i ;
-       //   bit trigger_i ;
-       //   bit interrupt_clear_i ;
+       //   bit [11:0] Measurement_count_1 ;
+       //   bit [11:0] Measurement_count_2 ;
+       //   bit [11:0] Measurement_count_3 ;
+       //   bit [11:0] Measurement_count_4 ;
        initiator_struct = fsm_in_initiator_struct;
        //
        // Reference code;
@@ -217,6 +224,7 @@ end
        //      fsm_in_responder_struct.xyz = analog_ready_i_i;  //     
        //      fsm_in_responder_struct.xyz = trigger_i_i;  //     
        //      fsm_in_responder_struct.xyz = interrupt_clear_i_i;  //     
+       //      fsm_in_responder_struct.xyz = deintegrate_i_i;  //     
        //    Initiator inout signals
        //    How to assign a signal from an initiator struct member named xyz.   
        //    All available initiator output and inout signals listed.
@@ -254,14 +262,16 @@ bit first_transfer=1;
        );// pragma tbx xtf   
   // Variables within the fsm_in_initiator_struct:
   //   bit comp_i ;
-  //   bit analog_ready_i ;
-  //   bit trigger_i ;
-  //   bit interrupt_clear_i ;
+  //   bit [11:0] Measurement_count_1 ;
+  //   bit [11:0] Measurement_count_2 ;
+  //   bit [11:0] Measurement_count_3 ;
+  //   bit [11:0] Measurement_count_4 ;
   // Variables within the fsm_in_responder_struct:
   //   bit comp_i ;
-  //   bit analog_ready_i ;
-  //   bit trigger_i ;
-  //   bit interrupt_clear_i ;
+  //   bit [11:0] Measurement_count_1 ;
+  //   bit [11:0] Measurement_count_2 ;
+  //   bit [11:0] Measurement_count_3 ;
+  //   bit [11:0] Measurement_count_4 ;
        // Reference code;
        //    How to wait for signal value
        //      while (control_signal == 1'b1) @(posedge clk_i_i);
@@ -278,6 +288,7 @@ bit first_transfer=1;
        //      analog_ready_i_o <= fsm_in_responder_struct.xyz;  //     
        //      trigger_i_o <= fsm_in_responder_struct.xyz;  //     
        //      interrupt_clear_i_o <= fsm_in_responder_struct.xyz;  //     
+       //      deintegrate_i_o <= fsm_in_responder_struct.xyz;  //     
        //    Responder inout signals
     
   @(posedge clk_i_i);
