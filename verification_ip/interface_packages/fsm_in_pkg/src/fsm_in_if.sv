@@ -24,6 +24,7 @@
 // .dut_signal_port(fsm_in_bus.trigger_i), // Agent input 
 // .dut_signal_port(fsm_in_bus.interrupt_clear_i), // Agent input 
 // .dut_signal_port(fsm_in_bus.deintegrate_i), // Agent input 
+// .dut_signal_port(fsm_in_bus.interrupt_o), // Agent input (DUT output observation)
 
 import uvmf_base_pkg_hdl::*;
 import fsm_in_pkg_hdl::*;
@@ -37,7 +38,8 @@ interface  fsm_in_if
   inout tri  analog_ready_i,
   inout tri  trigger_i,
   inout tri  interrupt_clear_i,
-  inout tri  deintegrate_i
+  inout tri  deintegrate_i,
+  inout tri  interrupt_o
   );
 
 modport monitor_port 
@@ -48,7 +50,8 @@ modport monitor_port
   input analog_ready_i,
   input trigger_i,
   input interrupt_clear_i,
-  input deintegrate_i
+  input deintegrate_i,
+  input interrupt_o
   );
 
 modport initiator_port 
@@ -59,7 +62,8 @@ modport initiator_port
   input analog_ready_i,
   input trigger_i,
   input interrupt_clear_i,
-  input deintegrate_i
+  input deintegrate_i,
+  input interrupt_o
   );
 
 modport responder_port 
@@ -70,7 +74,8 @@ modport responder_port
   output analog_ready_i,
   output trigger_i,
   output interrupt_clear_i,
-  output deintegrate_i
+  output deintegrate_i,
+  input interrupt_o
   );
   
 

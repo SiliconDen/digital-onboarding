@@ -74,6 +74,7 @@ end
   tri  trigger_i_i;
   tri  interrupt_clear_i_i;
   tri  deintegrate_i_i;
+  tri  interrupt_o_i;
   assign clk_i_i = bus.clk_i;
   assign rst_n_i_i = bus.rst_n_i;
   assign comp_i_i = bus.comp_i;
@@ -81,6 +82,7 @@ end
   assign trigger_i_i = bus.trigger_i;
   assign interrupt_clear_i_i = bus.interrupt_clear_i;
   assign deintegrate_i_i = bus.deintegrate_i;
+  assign interrupt_o_i = bus.interrupt_o;
 
   // Proxy handle to UVM monitor
   fsm_in_pkg::fsm_in_monitor  proxy;
@@ -156,29 +158,113 @@ end
     //     //    fsm_in_monitor_struct.Measurement_count_3
     //     //    fsm_in_monitor_struct.Measurement_count_4
     //     //
-    // Reference code;
-    //    How to wait for signal value
-    //      while (control_signal === 1'b1) @(posedge clk_i_i);
-    //    
-    //    How to assign a struct member, named xyz, from a signal.   
-    //    All available input signals listed.
-    //      fsm_in_monitor_struct.xyz = comp_i_i;  //     
-    //      fsm_in_monitor_struct.xyz = analog_ready_i_i;  //     
-    //      fsm_in_monitor_struct.xyz = trigger_i_i;  //     
-    //      fsm_in_monitor_struct.xyz = interrupt_clear_i_i;  //     
-    //      fsm_in_monitor_struct.xyz = deintegrate_i_i;  //     
     // pragma uvmf custom do_monitor begin
-    // UVMF_CHANGE_ME : Implement protocol monitoring.  The commented reference code 
-    // below are examples of how to capture signal values and assign them to 
-    // structure members.  All available input signals are listed.  The 'while' 
-    // code example shows how to wait for a synchronous flow control signal.  This
-    // task should return when a complete transfer has been observed.  Once this task is
-    // exited with captured values, it is then called again to wait for and observe 
-    // the next transfer. One clock cycle is consumed between calls to do_monitor.
-    @(posedge clk_i_i);
-    @(posedge clk_i_i);
-    @(posedge clk_i_i);
-    @(posedge clk_i_i);
+    // FSM Input Monitor - Observes the measurement sequence
+    
+    bit initial_comp_i;
+    bit [11:0] count;
+    
+    // Initialize counts to 0
+    fsm_in_monitor_struct.Measurement_count_1 = 12'd0;
+    fsm_in_monitor_struct.Measurement_count_2 = 12'd0;
+    fsm_in_monitor_struct.Measurement_count_3 = 12'd0;
+    fsm_in_monitor_struct.Measurement_count_4 = 12'd0;
+    
+    // 1. Wait for reset to deassert
+    while (rst_n_i_i === 1'b0) @(posedge clk_i_i);
+    
+    // 2. Capture initial comp_i value
+    initial_comp_i = comp_i_i;
+    fsm_in_monitor_struct.comp_i = initial_comp_i;
+    
+    // 3. Wait for trigger_i and analog_ready_i
+    while (trigger_i_i === 1'b0 || analog_ready_i_i === 1'b0) @(posedge clk_i_i);
+    
+    // 4. Wait for deintegrate_i to be high
+    while (deintegrate_i_i === 1'b0) @(posedge clk_i_i);
+    
+    // 5. Count clocks until comp_i flips (measurement_count_1)
+    count = 12'd0;
+    while (comp_i_i === initial_comp_i) begin
+      @(posedge clk_i_i);
+      count++;
+    end
+    fsm_in_monitor_struct.Measurement_count_1 = count;
+    initial_comp_i = ~initial_comp_i; // Track the flip
+    
+    // 6. Check if measurement_count_1 >= 360
+    if (count >= 12'd360) begin
+      // Wait for interrupt_o
+      while (interrupt_o_i === 1'b0) @(posedge clk_i_i);
+      // Wait for interrupt_clear_i
+      while (interrupt_clear_i_i === 1'b0) @(posedge clk_i_i);
+    end
+    else begin
+      // measurement_count_1 < 360: autorange to next level
+      
+      // Wait for deintegrate_i again (it will go low then high)
+      while (deintegrate_i_i === 1'b1) @(posedge clk_i_i);
+      while (deintegrate_i_i === 1'b0) @(posedge clk_i_i);
+      
+      // Count clocks until comp_i flips (measurement_count_2)
+      count = 12'd0;
+      while (comp_i_i === initial_comp_i) begin
+        @(posedge clk_i_i);
+        count++;
+      end
+      fsm_in_monitor_struct.Measurement_count_2 = count;
+      initial_comp_i = ~initial_comp_i;
+      
+      if (count >= 12'd360) begin
+        // Wait for interrupt_o
+        while (interrupt_o_i === 1'b0) @(posedge clk_i_i);
+        // Wait for interrupt_clear_i
+        while (interrupt_clear_i_i === 1'b0) @(posedge clk_i_i);
+      end
+      else begin
+        // measurement_count_2 < 360: autorange to next level
+        
+        // Wait for deintegrate_i again
+        while (deintegrate_i_i === 1'b1) @(posedge clk_i_i);
+        while (deintegrate_i_i === 1'b0) @(posedge clk_i_i);
+        
+        // Count clocks until comp_i flips (measurement_count_3)
+        count = 12'd0;
+        while (comp_i_i === initial_comp_i) begin
+          @(posedge clk_i_i);
+          count++;
+        end
+        fsm_in_monitor_struct.Measurement_count_3 = count;
+        initial_comp_i = ~initial_comp_i;
+        
+        if (count >= 12'd360) begin
+          // Wait for interrupt_o
+          while (interrupt_o_i === 1'b0) @(posedge clk_i_i);
+          // Wait for interrupt_clear_i
+          while (interrupt_clear_i_i === 1'b0) @(posedge clk_i_i);
+        end
+        else begin
+          // measurement_count_3 < 360: final autorange level
+          
+          // Wait for deintegrate_i again
+          while (deintegrate_i_i === 1'b1) @(posedge clk_i_i);
+          while (deintegrate_i_i === 1'b0) @(posedge clk_i_i);
+          
+          // Count clocks until comp_i flips (measurement_count_4)
+          count = 12'd0;
+          while (comp_i_i === initial_comp_i) begin
+            @(posedge clk_i_i);
+            count++;
+          end
+          fsm_in_monitor_struct.Measurement_count_4 = count;
+          
+          // measurement_count_4 is always the last - wait for interrupt_o
+          while (interrupt_o_i === 1'b0) @(posedge clk_i_i);
+          // Wait for interrupt_clear_i
+          while (interrupt_clear_i_i === 1'b0) @(posedge clk_i_i);
+        end
+      end
+    end
     // pragma uvmf custom do_monitor end
   endtask         
   

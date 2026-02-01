@@ -71,7 +71,6 @@ class fsm_predictor #(
   // FUNCTION: new
   function new(string name, uvm_component parent);
      super.new(name,parent);
-    `uvm_warning("PREDICTOR_REVIEW", "This predictor has been created either through generation or re-generation with merging.  Remove this warning after the predictor has been reviewed.")
   // pragma uvmf custom new begin
   // pragma uvmf custom new end
   endfunction
@@ -95,10 +94,17 @@ class fsm_predictor #(
     `uvm_info("PRED", {"            Data: ",t.convert2string()}, UVM_FULL)
     // Construct one of each output transaction type.
     fsm_sb_ap_output_transaction = fsm_sb_ap_output_transaction_t::type_id::create("fsm_sb_ap_output_transaction");
-    //  UVMF_CHANGE_ME: Implement predictor model here.  
-    `uvm_info("UNIMPLEMENTED_PREDICTOR_MODEL", "******************************************************************************************************",UVM_NONE)
-    `uvm_info("UNIMPLEMENTED_PREDICTOR_MODEL", "UVMF_CHANGE_ME: The fsm_predictor::write_fsm_in_ae function needs to be completed with DUT prediction model",UVM_NONE)
-    `uvm_info("UNIMPLEMENTED_PREDICTOR_MODEL", "******************************************************************************************************",UVM_NONE)
+    
+    // Prediction model: Map input measurement counts to output measurement counts
+    fsm_sb_ap_output_transaction.measurement_count_1 = t.Measurement_count_1;
+    fsm_sb_ap_output_transaction.measurement_count_2 = t.Measurement_count_2;
+    fsm_sb_ap_output_transaction.measurement_count_3 = t.Measurement_count_3;
+    fsm_sb_ap_output_transaction.measurement_count_4 = t.Measurement_count_4;
+    
+    // ref_sign_o is set to comp_i
+    fsm_sb_ap_output_transaction.ref_sign_o = t.comp_i;
+    
+    `uvm_info("PRED", {"Predicted output: ", fsm_sb_ap_output_transaction.convert2string()}, UVM_MEDIUM)
  
     // Code for sending output transaction out through fsm_sb_ap
     // Please note that each broadcasted transaction should be a different object than previously 

@@ -82,7 +82,8 @@ import uvmf_base_pkg_hdl::*;
      .analog_ready_i(analog_ready_i_w),
      .trigger_i(trigger_i_w),
      .interrupt_clear_i(interrupt_clear_i_w),
-     .deintegrate_i(deintegrate_i_w)
+     .deintegrate_i(deintegrate_i_w),
+     .interrupt_o(interrupt_o_w)
      // pragma uvmf custom fsm_in_bus_connections end
      );
   fsm_out_if  fsm_out_bus(
@@ -128,7 +129,6 @@ import uvmf_base_pkg_hdl::*;
       .interrupt_o(fsm_out_bus.interrupt_o),
       .measurement_count_o(fsm_out_bus.measurement_count_o)
   );
-  assign fsm_in_bus.deintegrate_i = fsm_out_bus.deintegrate_o;
   // pragma uvmf custom dut_instantiation end
 
   initial begin      // tbx vif_binding_block 

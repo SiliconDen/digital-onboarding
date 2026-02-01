@@ -160,31 +160,90 @@ end
     //     //    fsm_out_monitor_struct.measurement_count_3
     //     //    fsm_out_monitor_struct.measurement_count_4
     //     //
-    // Reference code;
-    //    How to wait for signal value
-    //      while (control_signal === 1'b1) @(posedge clk_i_i);
-    //    
-    //    How to assign a struct member, named xyz, from a signal.   
-    //    All available input signals listed.
-    //      fsm_out_monitor_struct.xyz = idle_o_i;  //     
-    //      fsm_out_monitor_struct.xyz = auto_zero_o_i;  //     
-    //      fsm_out_monitor_struct.xyz = integrate_o_i;  //     
-    //      fsm_out_monitor_struct.xyz = deintegrate_o_i;  //     
-    //      fsm_out_monitor_struct.xyz = ref_sign_o_i;  //     
-    //      fsm_out_monitor_struct.xyz = interrupt_o_i;  //     
-    //      fsm_out_monitor_struct.xyz = measurement_count_o_i;  //    [11:0] 
     // pragma uvmf custom do_monitor begin
-    // UVMF_CHANGE_ME : Implement protocol monitoring.  The commented reference code 
-    // below are examples of how to capture signal values and assign them to 
-    // structure members.  All available input signals are listed.  The 'while' 
-    // code example shows how to wait for a synchronous flow control signal.  This
-    // task should return when a complete transfer has been observed.  Once this task is
-    // exited with captured values, it is then called again to wait for and observe 
-    // the next transfer. One clock cycle is consumed between calls to do_monitor.
-    @(posedge clk_i_i);
-    @(posedge clk_i_i);
-    @(posedge clk_i_i);
-    @(posedge clk_i_i);
+    // FSM Output Monitor - Observes measurement results from DUT
+    
+    bit [11:0] captured_count;
+    
+    // Initialize all measurement counts to 0
+    fsm_out_monitor_struct.measurement_count_1 = 12'd0;
+    fsm_out_monitor_struct.measurement_count_2 = 12'd0;
+    fsm_out_monitor_struct.measurement_count_3 = 12'd0;
+    fsm_out_monitor_struct.measurement_count_4 = 12'd0;
+    
+    // 1. Wait for reset to deassert
+    while (rst_n_i_i === 1'b0) @(posedge clk_i_i);
+    
+    // 2. Wait for deintegrate_o to go high (measurement level 1 started)
+    while (deintegrate_o_i === 1'b0) @(posedge clk_i_i);
+    
+    // 3. Wait for auto_zero_o to go high (measurement level 1 ended)
+    while (auto_zero_o_i === 1'b0) @(posedge clk_i_i);
+    
+    // 4. Capture measurement_count_o and ref_sign_o for level 1
+    captured_count = measurement_count_o_i;
+    fsm_out_monitor_struct.measurement_count_1 = captured_count;
+    fsm_out_monitor_struct.ref_sign_o = ref_sign_o_i;
+    
+    // 5. Check if measurement_count_1 >= 360 (no autorange needed)
+    if (captured_count >= 12'd360) begin
+      // Wait for interrupt_o
+      while (interrupt_o_i === 1'b0) @(posedge clk_i_i);
+    end
+    else begin
+      // measurement_count_1 < 360: autorange to level 2
+      
+      // Wait for deintegrate_o to cycle (go low then high)
+      while (deintegrate_o_i === 1'b1) @(posedge clk_i_i);
+      while (deintegrate_o_i === 1'b0) @(posedge clk_i_i);
+      
+      // Wait for auto_zero_o to go high (measurement level 2 ended)
+      while (auto_zero_o_i === 1'b0) @(posedge clk_i_i);
+      
+      // Capture measurement_count_o for level 2
+      captured_count = measurement_count_o_i;
+      fsm_out_monitor_struct.measurement_count_2 = captured_count;
+      
+      if (captured_count >= 12'd360) begin
+        // Wait for interrupt_o
+        while (interrupt_o_i === 1'b0) @(posedge clk_i_i);
+      end
+      else begin
+        // measurement_count_2 < 360: autorange to level 3
+        
+        // Wait for deintegrate_o to cycle
+        while (deintegrate_o_i === 1'b1) @(posedge clk_i_i);
+        while (deintegrate_o_i === 1'b0) @(posedge clk_i_i);
+        
+        // Wait for auto_zero_o to go high (measurement level 3 ended)
+        while (auto_zero_o_i === 1'b0) @(posedge clk_i_i);
+        
+        // Capture measurement_count_o for level 3
+        captured_count = measurement_count_o_i;
+        fsm_out_monitor_struct.measurement_count_3 = captured_count;
+        
+        if (captured_count >= 12'd360) begin
+          // Wait for interrupt_o
+          while (interrupt_o_i === 1'b0) @(posedge clk_i_i);
+        end
+        else begin
+          // measurement_count_3 < 360: autorange to level 4 (final)
+          
+          // Wait for deintegrate_o to cycle
+          while (deintegrate_o_i === 1'b1) @(posedge clk_i_i);
+          while (deintegrate_o_i === 1'b0) @(posedge clk_i_i);
+          
+          // Wait for auto_zero_o to go high (measurement level 4 ended)
+          while (auto_zero_o_i === 1'b0) @(posedge clk_i_i);
+          
+          // Capture measurement_count_o for level 4
+          fsm_out_monitor_struct.measurement_count_4 = measurement_count_o_i;
+          
+          // Level 4 is always final - wait for interrupt_o
+          while (interrupt_o_i === 1'b0) @(posedge clk_i_i);
+        end
+      end
+    end
     // pragma uvmf custom do_monitor end
   endtask         
   

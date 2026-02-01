@@ -100,6 +100,7 @@ end
   reg  interrupt_clear_i_o = 1'b0;
   tri  deintegrate_i_i;
   reg  deintegrate_i_o = 1'b0;
+  tri  interrupt_o_i;
 
   // INITIATOR mode output signals
 
@@ -111,16 +112,19 @@ end
 
   // These are signals marked as 'input' by the config file, but the signals will be
   // driven by this BFM if put into RESPONDER mode (flipping all signal directions around)
+  // For INITIATOR mode, we drive comp_i and interrupt_clear_i (stimulus to DUT)
   assign comp_i_i = bus.comp_i;
-  assign bus.comp_i = (initiator_responder == RESPONDER) ? comp_i_o : 'bz;
+  assign bus.comp_i = (initiator_responder == INITIATOR) ? comp_i_o : 'bz;
   assign analog_ready_i_i = bus.analog_ready_i;
   assign bus.analog_ready_i = (initiator_responder == RESPONDER) ? analog_ready_i_o : 'bz;
   assign trigger_i_i = bus.trigger_i;
   assign bus.trigger_i = (initiator_responder == RESPONDER) ? trigger_i_o : 'bz;
   assign interrupt_clear_i_i = bus.interrupt_clear_i;
-  assign bus.interrupt_clear_i = (initiator_responder == RESPONDER) ? interrupt_clear_i_o : 'bz;
+  assign bus.interrupt_clear_i = (initiator_responder == INITIATOR) ? interrupt_clear_i_o : 'bz;
   assign deintegrate_i_i = bus.deintegrate_i;
   assign bus.deintegrate_i = (initiator_responder == RESPONDER) ? deintegrate_i_o : 'bz;
+  // Observe interrupt_o from DUT
+  assign interrupt_o_i = bus.interrupt_o;
 
 
   // These are signals marked as 'output' by the config file, but the outputs will
@@ -186,9 +190,8 @@ end
 
 // pragma uvmf custom initiate_and_get_response begin
 // ****************************************************************************
-// UVMF_CHANGE_ME
-// This task is used by an initator.  The task first initiates a transfer then
-// waits for the responder to complete the transfer.
+// FSM Input Driver - Initiator Mode
+// This task drives the measurement sequence based on transaction data
     task initiate_and_get_response( 
        // This argument passes transaction variables used by an initiator
        // to perform the initial part of a protocol transfer.  The values
@@ -211,34 +214,101 @@ end
        //   bit [11:0] Measurement_count_2 ;
        //   bit [11:0] Measurement_count_3 ;
        //   bit [11:0] Measurement_count_4 ;
+       
+       int i;
+       
        initiator_struct = fsm_in_initiator_struct;
-       //
-       // Reference code;
-       //    How to wait for signal value
-       //      while (control_signal == 1'b1) @(posedge clk_i_i);
-       //    
-       //    How to assign a responder struct member, named xyz, from a signal.   
-       //    All available initiator input and inout signals listed.
-       //    Initiator input signals
-       //      fsm_in_responder_struct.xyz = comp_i_i;  //     
-       //      fsm_in_responder_struct.xyz = analog_ready_i_i;  //     
-       //      fsm_in_responder_struct.xyz = trigger_i_i;  //     
-       //      fsm_in_responder_struct.xyz = interrupt_clear_i_i;  //     
-       //      fsm_in_responder_struct.xyz = deintegrate_i_i;  //     
-       //    Initiator inout signals
-       //    How to assign a signal from an initiator struct member named xyz.   
-       //    All available initiator output and inout signals listed.
-       //    Notice the _o.  Those are storage variables that allow for procedural assignment.
-       //    Initiator output signals
-       //    Initiator inout signals
-    // Initiate a transfer using the data received.
-    @(posedge clk_i_i);
-    @(posedge clk_i_i);
-    // Wait for the responder to complete the transfer then place the responder data into 
-    // fsm_in_responder_struct.
-    @(posedge clk_i_i);
-    @(posedge clk_i_i);
-    responder_struct = fsm_in_responder_struct;
+       
+       // 1. Assert comp_i from transaction immediately
+       comp_i_o <= fsm_in_initiator_struct.comp_i;
+       interrupt_clear_i_o <= 1'b0;
+       
+       // 2. Wait for reset to deassert
+       while (rst_n_i_i == 1'b0) @(posedge clk_i_i);
+       
+       // 3. Wait for trigger_i and analog_ready_i
+       while (trigger_i_i == 1'b0 || analog_ready_i_i == 1'b0) @(posedge clk_i_i);
+       
+       // 4. Wait for deintegrate_i to be high
+       while (deintegrate_i_i == 1'b0) @(posedge clk_i_i);
+       
+       // 5. Wait measurement_count_1 # of clocks, then flip comp_i
+       for (i = 0; i < fsm_in_initiator_struct.Measurement_count_1; i++) @(posedge clk_i_i);
+       comp_i_o <= ~comp_i_o;
+       
+       // 6. Check if measurement_count_1 >= 360
+       if (fsm_in_initiator_struct.Measurement_count_1 >= 12'd360) begin
+         // Wait for interrupt_o
+         while (interrupt_o_i == 1'b0) @(posedge clk_i_i);
+         // Assert interrupt_clear_i
+         interrupt_clear_i_o <= 1'b1;
+         @(posedge clk_i_i);
+         interrupt_clear_i_o <= 1'b0;
+       end
+       else begin
+         // measurement_count_1 < 360: autorange to next level
+         
+         // Wait for deintegrate_i again
+         while (deintegrate_i_i == 1'b0) @(posedge clk_i_i);
+         
+         // Wait measurement_count_2 # of clocks, then flip comp_i
+         for (i = 0; i < fsm_in_initiator_struct.Measurement_count_2; i++) @(posedge clk_i_i);
+         comp_i_o <= ~comp_i_o;
+         
+         if (fsm_in_initiator_struct.Measurement_count_2 >= 12'd360) begin
+           // Wait for interrupt_o
+           while (interrupt_o_i == 1'b0) @(posedge clk_i_i);
+           // Assert interrupt_clear_i
+           interrupt_clear_i_o <= 1'b1;
+           @(posedge clk_i_i);
+           interrupt_clear_i_o <= 1'b0;
+         end
+         else begin
+           // measurement_count_2 < 360: autorange to next level
+           
+           // Wait for deintegrate_i again
+           while (deintegrate_i_i == 1'b0) @(posedge clk_i_i);
+           
+           // Wait measurement_count_3 # of clocks, then flip comp_i
+           for (i = 0; i < fsm_in_initiator_struct.Measurement_count_3; i++) @(posedge clk_i_i);
+           comp_i_o <= ~comp_i_o;
+           
+           if (fsm_in_initiator_struct.Measurement_count_3 >= 12'd360) begin
+             // Wait for interrupt_o
+             while (interrupt_o_i == 1'b0) @(posedge clk_i_i);
+             // Assert interrupt_clear_i
+             interrupt_clear_i_o <= 1'b1;
+             @(posedge clk_i_i);
+             interrupt_clear_i_o <= 1'b0;
+           end
+           else begin
+             // measurement_count_3 < 360: final autorange level
+             
+             // Wait for deintegrate_i again
+             while (deintegrate_i_i == 1'b0) @(posedge clk_i_i);
+             
+             // Wait measurement_count_4 # of clocks, then flip comp_i
+             for (i = 0; i < fsm_in_initiator_struct.Measurement_count_4; i++) @(posedge clk_i_i);
+             comp_i_o <= ~comp_i_o;
+             
+             // measurement_count_4 is always the last - wait for interrupt_o regardless
+             while (interrupt_o_i == 1'b0) @(posedge clk_i_i);
+             // Assert interrupt_clear_i
+             interrupt_clear_i_o <= 1'b1;
+             @(posedge clk_i_i);
+             interrupt_clear_i_o <= 1'b0;
+           end
+         end
+       end
+       
+       // Copy results to responder struct
+       fsm_in_responder_struct.comp_i = comp_i_o;
+       fsm_in_responder_struct.Measurement_count_1 = fsm_in_initiator_struct.Measurement_count_1;
+       fsm_in_responder_struct.Measurement_count_2 = fsm_in_initiator_struct.Measurement_count_2;
+       fsm_in_responder_struct.Measurement_count_3 = fsm_in_initiator_struct.Measurement_count_3;
+       fsm_in_responder_struct.Measurement_count_4 = fsm_in_initiator_struct.Measurement_count_4;
+       
+       responder_struct = fsm_in_responder_struct;
   endtask        
 // pragma uvmf custom initiate_and_get_response end
 

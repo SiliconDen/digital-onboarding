@@ -54,14 +54,33 @@ class fsm_coverage #(
 
 
   // pragma uvmf custom class_item_additional begin
+  // Scenario tracking bits
+  bit normal_1_hit;
+  bit overflow_1_hit;
+  bit normal_2_hit;
+  bit overflow_2_hit;
+  bit normal_3_hit;
+  bit overflow_3_hit;
+  bit normal_4_hit;
+  bit overflow_4_hit;
   // pragma uvmf custom class_item_additional end
 
 // ****************************************************************************
-  // UVMF_CHANGE_ME : Add coverage bins, crosses, exclusions, etc. according to coverage needs.
+  // Coverage for 8 measurement scenarios
   covergroup fsm_coverage_cg;
     // pragma uvmf custom covergroup begin
     option.auto_bin_max=1024;
     option.per_instance=1;
+    
+    // Scenario coverpoints - each scenario is a single bin that must be hit
+    cp_normal_1:   coverpoint normal_1_hit   { bins hit = {1}; }
+    cp_overflow_1: coverpoint overflow_1_hit { bins hit = {1}; }
+    cp_normal_2:   coverpoint normal_2_hit   { bins hit = {1}; }
+    cp_overflow_2: coverpoint overflow_2_hit { bins hit = {1}; }
+    cp_normal_3:   coverpoint normal_3_hit   { bins hit = {1}; }
+    cp_overflow_3: coverpoint overflow_3_hit { bins hit = {1}; }
+    cp_normal_4:   coverpoint normal_4_hit   { bins hit = {1}; }
+    cp_overflow_4: coverpoint overflow_4_hit { bins hit = {1}; }
     // pragma uvmf custom covergroup end
   endgroup
 
@@ -71,8 +90,16 @@ class fsm_coverage #(
   function new(string name, uvm_component parent);
      super.new(name,parent);
     fsm_coverage_cg=new;
-    `uvm_warning("COVERAGE_MODEL_REVIEW", "A covergroup has been constructed which may need review because of either generation or re-generation with merging.  Remove this warning after the covergroup has been reviewed.")
   // pragma uvmf custom new begin
+    // Initialize all scenario bits to 0
+    normal_1_hit = 0;
+    overflow_1_hit = 0;
+    normal_2_hit = 0;
+    overflow_2_hit = 0;
+    normal_3_hit = 0;
+    overflow_3_hit = 0;
+    normal_4_hit = 0;
+    overflow_4_hit = 0;
   // pragma uvmf custom new end
   endfunction
 
@@ -96,11 +123,86 @@ class fsm_coverage #(
     `uvm_info("COV", "Transaction Received through fsm_out_ae", UVM_MEDIUM)
     `uvm_info("COV", {"            Data: ",t.convert2string()}, UVM_FULL)
 
-    //  UVMF_CHANGE_ME: Add functional coverage to this component to implement coverage model.  
-    `uvm_info("UNIMPLEMENTED_COVERAGE_MODEL", "******************************************************************************************************",UVM_NONE)
-    `uvm_info("UNIMPLEMENTED_COVERAGE_MODEL", "UVMF_CHANGE_ME: This component needs to be completed with coverage model",UVM_NONE)
-    `uvm_info("UNIMPLEMENTED_COVERAGE_MODEL", "******************************************************************************************************",UVM_NONE)
+    // Detect scenario and set corresponding bit
+    // Scenario 1: measurement_count_1 determines result (no underrange)
+    if (t.measurement_count_1 >= 12'd360 && t.measurement_count_1 < 12'd4000) begin
+      normal_1_hit = 1;
+      `uvm_info("COV", "Scenario: normal_1 detected", UVM_MEDIUM)
+    end
+    else if (t.measurement_count_1 == 12'd4000) begin
+      overflow_1_hit = 1;
+      `uvm_info("COV", "Scenario: overflow_1 detected", UVM_MEDIUM)
+    end
+    // Scenario 2: measurement_count_1 underrange, measurement_count_2 determines result
+    else if (t.measurement_count_1 < 12'd360) begin
+      if (t.measurement_count_2 >= 12'd360 && t.measurement_count_2 < 12'd4000) begin
+        normal_2_hit = 1;
+        `uvm_info("COV", "Scenario: normal_2 detected", UVM_MEDIUM)
+      end
+      else if (t.measurement_count_2 == 12'd4000) begin
+        overflow_2_hit = 1;
+        `uvm_info("COV", "Scenario: overflow_2 detected", UVM_MEDIUM)
+      end
+      // Scenario 3: measurement_count_1 & 2 underrange, measurement_count_3 determines result
+      else if (t.measurement_count_2 < 12'd360) begin
+        if (t.measurement_count_3 >= 12'd360 && t.measurement_count_3 < 12'd4000) begin
+          normal_3_hit = 1;
+          `uvm_info("COV", "Scenario: normal_3 detected", UVM_MEDIUM)
+        end
+        else if (t.measurement_count_3 == 12'd4000) begin
+          overflow_3_hit = 1;
+          `uvm_info("COV", "Scenario: overflow_3 detected", UVM_MEDIUM)
+        end
+        // Scenario 4: measurement_count_1, 2 & 3 underrange, measurement_count_4 determines result
+        else if (t.measurement_count_3 < 12'd360) begin
+          if (t.measurement_count_4 >= 12'd360 && t.measurement_count_4 < 12'd4000) begin
+            normal_4_hit = 1;
+            `uvm_info("COV", "Scenario: normal_4 detected", UVM_MEDIUM)
+          end
+          else if (t.measurement_count_4 == 12'd4000) begin
+            overflow_4_hit = 1;
+            `uvm_info("COV", "Scenario: overflow_4 detected", UVM_MEDIUM)
+          end
+        end
+      end
+    end
+
+    // Sample the covergroup
+    fsm_coverage_cg.sample();
     // pragma uvmf custom fsm_out_ae_coverage end
+  endfunction
+
+  // ****************************************************************************
+  // FUNCTION: report_phase
+  // Print final coverage percentage at end of simulation
+  virtual function void report_phase(uvm_phase phase);
+    real cov_pct;
+    int scenarios_hit;
+    
+    // Calculate scenarios hit
+    scenarios_hit = normal_1_hit + overflow_1_hit + 
+                    normal_2_hit + overflow_2_hit + 
+                    normal_3_hit + overflow_3_hit + 
+                    normal_4_hit + overflow_4_hit;
+    
+    // Get covergroup coverage percentage
+    cov_pct = fsm_coverage_cg.get_inst_coverage();
+    
+    `uvm_info("COV_REPORT", "========================================", UVM_NONE)
+    `uvm_info("COV_REPORT", "    FSM SCENARIO COVERAGE REPORT", UVM_NONE)
+    `uvm_info("COV_REPORT", "========================================", UVM_NONE)
+    `uvm_info("COV_REPORT", $sformatf("  normal_1:   %s", normal_1_hit ? "HIT" : "MISS"), UVM_NONE)
+    `uvm_info("COV_REPORT", $sformatf("  overflow_1: %s", overflow_1_hit ? "HIT" : "MISS"), UVM_NONE)
+    `uvm_info("COV_REPORT", $sformatf("  normal_2:   %s", normal_2_hit ? "HIT" : "MISS"), UVM_NONE)
+    `uvm_info("COV_REPORT", $sformatf("  overflow_2: %s", overflow_2_hit ? "HIT" : "MISS"), UVM_NONE)
+    `uvm_info("COV_REPORT", $sformatf("  normal_3:   %s", normal_3_hit ? "HIT" : "MISS"), UVM_NONE)
+    `uvm_info("COV_REPORT", $sformatf("  overflow_3: %s", overflow_3_hit ? "HIT" : "MISS"), UVM_NONE)
+    `uvm_info("COV_REPORT", $sformatf("  normal_4:   %s", normal_4_hit ? "HIT" : "MISS"), UVM_NONE)
+    `uvm_info("COV_REPORT", $sformatf("  overflow_4: %s", overflow_4_hit ? "HIT" : "MISS"), UVM_NONE)
+    `uvm_info("COV_REPORT", "----------------------------------------", UVM_NONE)
+    `uvm_info("COV_REPORT", $sformatf("  Scenarios Hit: %0d / 8", scenarios_hit), UVM_NONE)
+    `uvm_info("COV_REPORT", $sformatf("  Coverage: %.2f%%", cov_pct), UVM_NONE)
+    `uvm_info("COV_REPORT", "========================================", UVM_NONE)
   endfunction
 
 endclass 

@@ -26,15 +26,10 @@ class fsm_in_transaction  extends uvmf_transaction_base;
 
   rand bit [1:0] autorange_level ;
   rand bit overflow ;
-  rand bit noise_sign ;
   rand bit [11:0] normalrange ;
   rand bit [11:0] underrange_1 ;
   rand bit [11:0] underrange_2 ;
   rand bit [11:0] underrange_3 ;
-  rand bit [11:0] noise_value_1 ;
-  rand bit [11:0] noise_value_2 ;
-  rand bit [11:0] noise_value_3 ;
-  rand bit [11:0] noise_value_4 ;
 
 
   //Constraints for the transaction variables:
@@ -50,12 +45,6 @@ class fsm_in_transaction  extends uvmf_transaction_base;
     underrange_3 == (normalrange + 500) / 1000; 
   }
 
-  constraint noise_c {
-    noise_value_1 <= (normalrange * 5) / 100;
-    noise_value_2 <= (underrange_1 * 5) / 100;
-    noise_value_3 <= (underrange_2 * 5) / 100;
-    noise_value_4 <= (underrange_3 * 5) / 100;
-  }
   // pragma uvmf custom class_item_additional end
 
   //*******************************************************************
@@ -225,8 +214,8 @@ class fsm_in_transaction  extends uvmf_transaction_base;
         end else begin
           Measurement_count_3 = normalrange;
         end
-        Measurement_count_2 = underrange_2;
-        Measurement_count_1 = underrange_1;
+        Measurement_count_2 = underrange_1;
+        Measurement_count_1 = underrange_2;
       end
       2'b11: begin
         if(overflow) begin
@@ -234,22 +223,11 @@ class fsm_in_transaction  extends uvmf_transaction_base;
         end else begin
           Measurement_count_4 = normalrange;
         end
-        Measurement_count_3 = underrange_3;
+        Measurement_count_3 = underrange_1;
         Measurement_count_2 = underrange_2;
-        Measurement_count_1 = underrange_1;
+        Measurement_count_1 = underrange_3;
       end
     endcase
-    if(noise_sign) begin
-      Measurement_count_1 = Measurement_count_1 + noise_value_1;
-      Measurement_count_2 = Measurement_count_2 - noise_value_2;
-      Measurement_count_3 = Measurement_count_3 + noise_value_3;
-      Measurement_count_4 = Measurement_count_4 + noise_value_4;
-    end else begin
-      Measurement_count_1 = Measurement_count_1 - noise_value_1;
-      Measurement_count_2 = Measurement_count_2 - noise_value_2;
-      Measurement_count_3 = Measurement_count_3 + noise_value_3;
-      Measurement_count_4 = Measurement_count_4 - noise_value_4;
-    end
     // pragma uvmf custom post_randomize end
   endfunction
 
