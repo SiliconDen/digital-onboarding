@@ -105,7 +105,7 @@ class fsm_out_transaction  extends uvmf_transaction_base;
   virtual function string convert2string();
     // pragma uvmf custom convert2string begin
     // UVMF_CHANGE_ME : Customize format if desired.
-    return $sformatf("ref_sign_o:0x%x measurement_count_1:0x%x measurement_count_2:0x%x measurement_count_3:0x%x measurement_count_4:0x%x ",ref_sign_o,measurement_count_1,measurement_count_2,measurement_count_3,measurement_count_4);
+    return $sformatf("ref_sign_o:%0d measurement_count_1:%0d measurement_count_2:%0d measurement_count_3:%0d measurement_count_4:%0d ",ref_sign_o,measurement_count_1,measurement_count_2,measurement_count_3,measurement_count_4);
     // pragma uvmf custom convert2string end
   endfunction
 

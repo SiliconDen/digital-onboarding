@@ -112,13 +112,13 @@ end
 
   // These are signals marked as 'input' by the config file, but the signals will be
   // driven by this BFM if put into RESPONDER mode (flipping all signal directions around)
-  // For INITIATOR mode, we drive comp_i and interrupt_clear_i (stimulus to DUT)
+  // For INITIATOR mode, we drive comp_i, interrupt_clear_i, trigger_i, analog_ready_i (stimulus to DUT)
   assign comp_i_i = bus.comp_i;
   assign bus.comp_i = (initiator_responder == INITIATOR) ? comp_i_o : 'bz;
   assign analog_ready_i_i = bus.analog_ready_i;
-  assign bus.analog_ready_i = (initiator_responder == RESPONDER) ? analog_ready_i_o : 'bz;
+  assign bus.analog_ready_i = (initiator_responder == INITIATOR) ? analog_ready_i_o : 'bz;
   assign trigger_i_i = bus.trigger_i;
-  assign bus.trigger_i = (initiator_responder == RESPONDER) ? trigger_i_o : 'bz;
+  assign bus.trigger_i = (initiator_responder == INITIATOR) ? trigger_i_o : 'bz;
   assign interrupt_clear_i_i = bus.interrupt_clear_i;
   assign bus.interrupt_clear_i = (initiator_responder == INITIATOR) ? interrupt_clear_i_o : 'bz;
   assign deintegrate_i_i = bus.deintegrate_i;
@@ -219,17 +219,21 @@ end
        
        initiator_struct = fsm_in_initiator_struct;
        
-       // 1. Assert comp_i from transaction immediately
+       // 1. Initialize all outputs
        comp_i_o <= fsm_in_initiator_struct.comp_i;
        interrupt_clear_i_o <= 1'b0;
+       trigger_i_o <= 1'b0;
+       analog_ready_i_o <= 1'b1;
        
        // 2. Wait for reset to deassert
        while (rst_n_i_i == 1'b0) @(posedge clk_i_i);
        
-       // 3. Wait for trigger_i and analog_ready_i
-       while (trigger_i_i == 1'b0 || analog_ready_i_i == 1'b0) @(posedge clk_i_i);
+       // 3. Assert trigger_i to start measurement
+       trigger_i_o <= 1'b1;
+       @(posedge clk_i_i);
+       trigger_i_o <= 1'b0;
        
-       // 4. Wait for deintegrate_i to be high
+       // 4. Wait for deintegrate_i to be high (measurement started)
        while (deintegrate_i_i == 1'b0) @(posedge clk_i_i);
        
        // 5. Wait measurement_count_1 # of clocks, then flip comp_i

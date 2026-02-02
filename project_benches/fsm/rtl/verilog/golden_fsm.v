@@ -384,11 +384,11 @@ module state_machine (
                 // Distributed integration mode (dbg_i[52] controls pulse/inverse pulse mode)
                 next_auto_zero = 1'b0;
                 next_deintegrate = 1'b0;
-                next_idle = 1'b1;
-                next_integrate = 1'b0;
+                next_idle = 1'b0;
+                next_integrate = 1'b1;
                 if(pulse_count_i == current_target_pulse) begin
-                    next_idle = 1'b0;
-                    next_integrate = 1'b1;
+                    next_idle = 1'b1;
+                    next_integrate = 1'b0;
                 end
                 // RANGE_3 and RANGE_4: continuous integration (no distributed pulses)
                 if(current_range == RANGE_3 || current_range == RANGE_4) begin

@@ -102,7 +102,7 @@ class fsm_predictor #(
     fsm_sb_ap_output_transaction.measurement_count_4 = t.Measurement_count_4;
     
     // ref_sign_o is set to comp_i
-    fsm_sb_ap_output_transaction.ref_sign_o = t.comp_i;
+    fsm_sb_ap_output_transaction.ref_sign_o = ~t.comp_i;
     
     `uvm_info("PRED", {"Predicted output: ", fsm_sb_ap_output_transaction.convert2string()}, UVM_MEDIUM)
  
